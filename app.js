@@ -1,12 +1,13 @@
 import React, { Component } from "react"
 import { Window, App, Text, Button, View, StyleSheet, TextInput, Picker } from "proton-native"
+import OpenedTrades from "./components/OpenedTrades"
+import SymbolPicker from "./components/SymbolPicker"
+import ConnectionForm from "./components/ConnectionForm"
 
-// Import necessary modules
 const Client = require("./js/Client")
 const Orders = require("./js/Orders")
 const StrategyManager = require("./js/StrategyManager")
 const Indicators = require("./js/Indicators")
-
 
 export default class MTClient extends Component {
   constructor(props) {
@@ -18,10 +19,11 @@ export default class MTClient extends Component {
       symbol: "EURUSD",
       reqPort: "5555",
       pullPort: "5556",
+      timeframe: "3000",
       txtBid: "",
       txtAsk: "",
       indicators: [],
-      openedTrades: undefined,
+      openedTrades: [],
       client: undefined
     }
   
@@ -72,7 +74,6 @@ export default class MTClient extends Component {
     // Create new strategy (id, symbol, usedIndicators)
     strategyManager.addStrategy(66, symbol, ["ma15"])
 
-
     setInterval(() => {
       //
       // Request for opened trades
@@ -84,66 +85,74 @@ export default class MTClient extends Component {
       // Get last price
       const lastPrice = symbolArr[symbolArr.length - 1]
  
+      const openedTrades = client.getOpenedTrades()
+      
       if (lastPrice) {
         //
-        // Sends <prices> to all strategies
-        strategyManager.sendEvent(client.getOpenedTrades(), symbolArr)
+        // Sends event to all strategies
+        strategyManager.sendEvent(openedTrades, symbolArr)
         
         this.setState({
           txtBid: lastPrice.bid,
           txtAsk: lastPrice.ask,
-          openedTrades: client.getOpenedTrades()
+          openedTrades: Object.values(openedTrades)
         })
       }
-    }, 1000)
+    }, this.state.timeframe)
   }
   
+  /////////////////////// UI Changes ////////////////////////
 
-  ///
-  /// Renders GUI
-  ///
+  changeSymbol(symbol) {
+    if (this.state.connected) return
+    this.setState({symbol: symbol})
+  } 
+
+  changeReqPort(reqPort) {
+    if (this.state.connected) return
+    this.setState({reqPort: reqPort})
+  }
+
+  changePullPort(pullPort) {
+    if (this.state.connected) return
+    this.setState({pullPort: pullPort})
+  }
+
+  changeTimeframe(timeframe) {
+    if (this.state.connected) return
+    this.setState({timeframe: timeframe})
+  }
+
+  ///////////////////////////////////////////////////////////
+
   render() {
     const styles = StyleSheet.create({
-      mainWindow: { padding: 20, width: 300, height: 500, backgroundColor: "#ece6df" }, 
-      mainTitle: { fontSize: 20, fontWeight: 'bold', color: 'black' },
-      viewConnect: { },
+      mainWindow: { padding: 20, width: 300, height: 500, backgroundColor: "#ece6df" }
     })
-    
+
     return (
       <App>
         <Window style={ styles.mainWindow }>
-          <View style={ styles.viewConnect }>
-            <Text style={ {fontSize: 14, fontWeight: 'bold'} }> MetaTrader Connection </Text>
-            <Text style={{ fontWeight: 'bold' }}> ReqPort: </Text> 
-            <TextInput
-              style={{ borderWidth: 1, width: '200px' }}  value={this.state.reqPort}
-            />
-            <Text style={{ fontWeight: 'bold' }}> PullPort: </Text> 
-            <TextInput
-              style={{ borderWidth: 1, width: '200px' }}  value={this.state.pullPort}
-            />
-            <Text style={{ fontWeight: 'bold' }}> Symbol: </Text> 
-            <Picker
-              selectedValue={this.state.symbol}
-              style={{height: 25, width: 100}}
-              onValueChange={(itemValue, itemIndex) =>
-                this.setState({symbol: itemValue})
-              }>
-              <Picker.Item label="EURUSD" value="EURUSD" />
-              <Picker.Item label="GBPJPY" value="GBPJPY" />
-            </Picker>
-            <Button style={{ width: '200px' }} title="Connect" onPress={ () => { this._connect() } } />
-          </View>
+          <ConnectionForm 
+            pullPort={this.state.pullPort} 
+            reqPort={this.state.reqPort} 
+            changeReqPort={this.changeReqPort.bind(this)}
+            changePullPort={this.changePullPort.bind(this)}
+          />
+          <Text style={{ fontWeight: 'bold' }}> Timeframe: </Text> 
+          <TextInput
+            style={{ borderWidth: 1, width: '200px' }}  
+            value={this.state.timeframe}
+            onChangeText={ this.changeTimeframe.bind(this)} 
+          />
+          <Button style={{ width: '200px' }} title="Connect" onPress={ () => { this._connect() } } />
+          <Text style={{ fontWeight: 'bold' }}> Symbol: </Text> 
+          <SymbolPicker changeSymbol={ this.changeSymbol.bind(this) } />
           <View>
             <Text style={{ fontWeight: 'bold' }}> ask: {this.state.txtBid} </Text>
             <Text style={{ fontWeight: 'bold' }}> bid: {this.state.txtAsk} </Text>
           </View>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <Text style={{ fontWeight: 'bold' }}> openedTrades: </Text>
-            <View style={{width: 50, height: 50, backgroundColor: 'powderblue'}} />
-            <View style={{width: 50, height: 50, backgroundColor: 'skyblue'}} />
-            <View style={{width: 50, height: 50, backgroundColor: 'steelblue'}} />
-          </View>
+          <OpenedTrades trades={this.state.openedTrades} />
         </Window>
       </App>
     );
