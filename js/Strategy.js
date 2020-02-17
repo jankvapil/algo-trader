@@ -10,12 +10,14 @@ class Strategy {
    * @param {Array} states
    * @param {Number} initIndex - Defines which state is initial
    * @param {Array<String>} indicators - Identifiers (names) of indicators
+   * @param {Number} maxProfitRange - Profit limit when the position is ready to close 
    */
-  constructor(id, states, initIndex, indicators) {
+  constructor(id, states, initIndex, indicators, maxProfitRange) {
     this.id = id;
     this.states = states;
     this.state = states[initIndex];
     this.indicators = indicators;
+    this.maxProfitRange = maxProfitRange;
 
     // Default setting of strategies transitions
     this.transitions = [
@@ -24,11 +26,11 @@ class Strategy {
         nextStates: [
           {
             name: "SELL",
-            predicate: (price, indicators) => price < indicators.get("ma15")
+            predicate: (price, profit, indicators) => price < indicators.get("ma15")
           },
           {
             name: "BUY",
-            predicate: (price, indicators) => price >= indicators.get("ma15")
+            predicate: (price, profit, indicators) => price >= indicators.get("ma15")
           }
         ]
       },
@@ -36,8 +38,8 @@ class Strategy {
         name: "SELL",
         nextStates: [
           {
-            name: "BUY",
-            predicate: (price, indicators) => price >= indicators.get("ma15")
+            name: "CLOSE",
+            predicate: (price, profit, indicators) => Math.abs(profit) > this.maxProfitRange 
           }
         ]
       },
@@ -45,8 +47,17 @@ class Strategy {
         name: "BUY",
         nextStates: [
           {
-            name: "SELL",
-            predicate: (price, indicators) => price < indicators.get("ma15")
+            name: "CLOSE",
+            predicate: (price, profit, indicators) => Math.abs(profit) > this.maxProfitRange 
+          }
+        ]
+      },
+      {
+        name: "CLOSE",
+        nextStates: [
+          {
+            name: "INIT",
+            predicate: (price, profit, indicators) => true
           }
         ]
       }
@@ -63,10 +74,13 @@ class Strategy {
 
   /**
    * Updates state by the transition table.
-   * @param {Number} price
+   * @param {Number} ticket - ticket of current strategy
+   * @param {Number} price - current price
+   * @param {Number} profit - current profit
    * @param {Map} indicatorsValuesMap
+   * @param {Number} simulated 
    */
-  updateState(price, indicatorsValuesMap) {
+  updateState(ticket, price, profit, indicatorsValuesMap, simulated) {
     console.log("price: ");
     console.log(price);
     console.log("indicatorsValuesMap: ");
@@ -87,7 +101,7 @@ class Strategy {
           if (ns.name == this.state.name) continue;
           //
           // If predicate is satisfied
-          if (ns.predicate(price, indicatorsValuesMap)) {
+          if (ns.predicate(price, profit, indicatorsValuesMap)) {
             //
             // set the current state and finish update
             this.state = this.states.find(obj => {
@@ -96,9 +110,7 @@ class Strategy {
 
             console.log("---- new state:");
             console.log(this.state);
-
-            // TODO: apply transition function of the state
-            this.state.applyTransition(price);
+            this.state.applyTransition(ticket, profit, simulated);
             return;
           }
         }

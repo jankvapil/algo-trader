@@ -163,6 +163,14 @@ class Client {
   isConnected() {
     return this.connected;
   }
+
+  /**
+   * Method sets max length of monitored symbol array
+   * @param {Number} seconds
+   */
+  setDbMaxLength(seconds) {
+    this.DB_MAX_LENGTH = seconds;
+  }
 }
 
 module.exports = Client;

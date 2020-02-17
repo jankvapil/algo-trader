@@ -24,6 +24,7 @@ export default class MTClient extends Component {
       txtAsk: "",
       indicators: [],
       openedTrades: [],
+      symbolArr: [],
       client: undefined
     }
   
@@ -46,10 +47,39 @@ export default class MTClient extends Component {
           f: Indicators.average(3)
         }
       )
-
       return new StrategyManager(client, this.state.indicators)
     }
+
+    ///
+    /// Main Loop..
+    ///
+    this.mainLoop = (strategyManager) => {
+      // Request for opened trades
+      Orders.getOpenedTrades(this.state.client)
+      //
+      // Request for update symbol rates
+      Orders.rates(this.state.client, this.state.symbol)
+
+      const symbolArr = this.state.symbolArr
+      const lastPrice = symbolArr[symbolArr.length - 1]
+      const openedTrades = this.state.client.getOpenedTrades()
+      
+      if (lastPrice) {
+        //
+        // Sends event to all strategies
+        strategyManager.sendEvent(openedTrades, symbolArr)
+        //
+        // Update app state
+        this.setState({
+          txtBid: lastPrice.bid,
+          txtAsk: lastPrice.ask,
+          openedTrades: Object.values(openedTrades)
+        })
+      }
+    }
   }
+
+  ///////////////////////////////////////////////////////////
 
   ///
   /// Connects to MT
@@ -66,7 +96,7 @@ export default class MTClient extends Component {
     client.connect()
 
     // Set monitoring symbol & get reference on the array
-    const symbolArr = client.setSymbolMonitoring(symbol)
+    this.setState({symbolArr : client.setSymbolMonitoring(symbol)})
 
     // Create strategy manager which handles incomming events
     const strategyManager = this.initStrategyManager(client)
@@ -74,31 +104,20 @@ export default class MTClient extends Component {
     // Create new strategy (id, symbol, usedIndicators)
     strategyManager.addStrategy(66, symbol, ["ma15"])
 
-    setInterval(() => {
-      //
-      // Request for opened trades
-      Orders.getOpenedTrades(client)
-      //
-      // Request for update symbol rates
-      Orders.rates(client, symbol)
-      //
-      // Get last price
-      const lastPrice = symbolArr[symbolArr.length - 1]
- 
-      const openedTrades = client.getOpenedTrades()
-      
-      if (lastPrice) {
-        //
-        // Sends event to all strategies
-        strategyManager.sendEvent(openedTrades, symbolArr)
-        
-        this.setState({
-          txtBid: lastPrice.bid,
-          txtAsk: lastPrice.ask,
-          openedTrades: Object.values(openedTrades)
-        })
-      }
-    }, this.state.timeframe)
+    //
+    // TODO:
+    //
+    // CHECK IF THERE IS NO STRATEGIES INDENTIFIED BY SAME ID !!!
+    // or
+    // SEND ORDER TO CLOSE ALL POSITIONS WITH THIS ID
+    // const openedTrades = this.state.client.getOpenedTrades() ..
+
+    // Set monitored symbol's array length (don't need longer array than max timeframe)
+    const maxTimeframe = Math.max(... this.state.indicators.map(i => i.timeframe))
+    client.setDbMaxLength(maxTimeframe)
+
+    // Fire main-event loop
+    setInterval(() => { this.mainLoop(strategyManager) }, this.state.timeframe)
   }
   
   /////////////////////// UI Changes ////////////////////////
