@@ -1,8 +1,9 @@
 import React, { Component } from "react"
-import { Window, App, Text, Button, View, StyleSheet, TextInput, Picker } from "proton-native"
+import { Window, App, Text, Button, View, StyleSheet, TextInput } from "proton-native"
 import OpenedTrades from "./components/OpenedTrades"
 import SymbolPicker from "./components/SymbolPicker"
 import ConnectionForm from "./components/ConnectionForm"
+import IndicatorAddForm from "./components/IndicatorAddForm"
 
 const Client = require("./js/Client")
 const Orders = require("./js/Orders")
@@ -30,23 +31,8 @@ export default class MTClient extends Component {
   
     ///
     /// Prepares Strategy Manager
-    /// TODO : User defined indicators
     ///
     this.initStrategyManager = (client) => {
-      //
-      // Prepare indicators
-      this.state.indicators.push(
-        {
-          name: "ma15",
-          timeframe: 15,
-          f: Indicators.average(15)
-        },
-        {
-          name: "ma3",
-          timeframe: 3,
-          f: Indicators.average(3)
-        }
-      )
       return new StrategyManager(client, this.state.indicators)
     }
 
@@ -102,7 +88,7 @@ export default class MTClient extends Component {
     const strategyManager = this.initStrategyManager(client)
 
     // Create new strategy (id, symbol, usedIndicators)
-    strategyManager.addStrategy(66, symbol, ["ma15"])
+    strategyManager.addStrategy(66, symbol, ["ma100"])
 
     //
     // TODO:
@@ -121,6 +107,23 @@ export default class MTClient extends Component {
   }
   
   /////////////////////// UI Changes ////////////////////////
+
+  addIndicator(name, timeframe, f) {
+    
+    // Check if indicator is unique
+    for (let i of this.state.indicators) {
+      console.log(i.name)
+      if (i.name == name) throw Error("This indicator is already defined!")
+    }
+
+    this.state.indicators.push(
+      {
+        name: name,
+        timeframe: timeframe,
+        f: f
+      }
+    )
+  }
 
   changeSymbol(symbol) {
     if (this.state.connected) return
@@ -152,6 +155,7 @@ export default class MTClient extends Component {
     return (
       <App>
         <Window style={ styles.mainWindow }>
+          <IndicatorAddForm addIndicator={this.addIndicator.bind(this)} />
           <ConnectionForm 
             pullPort={this.state.pullPort} 
             reqPort={this.state.reqPort} 

@@ -26,11 +26,11 @@ class Strategy {
         nextStates: [
           {
             name: "SELL",
-            predicate: (price, profit, indicators) => price < indicators.get("ma15")
+            predicate: (price, profit, indicators) => price < indicators.get("ma100")
           },
           {
             name: "BUY",
-            predicate: (price, profit, indicators) => price >= indicators.get("ma15")
+            predicate: (price, profit, indicators) => price >= indicators.get("ma100")
           }
         ]
       },

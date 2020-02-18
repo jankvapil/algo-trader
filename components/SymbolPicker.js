@@ -18,9 +18,8 @@ export default class OpenedTrades extends Component {
       <Picker
         selectedValue={this.state.symbol}
         style={{height: 25, width: 100}}
-        onValueChange={(itemValue, itemIndex) =>
-          this.props.changeSymbol(itemValue)
-        }>
+        onValueChange={(itemValue, itemIndex) => this.props.changeSymbol(itemValue)}
+      >
         <Picker.Item label="EURUSD" value="EURUSD" />
         <Picker.Item label="GBPJPY" value="GBPJPY" />
       </Picker>

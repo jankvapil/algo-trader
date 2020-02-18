@@ -73,9 +73,9 @@ class StrategyManager {
           new State("CLOSE", (ticket, profit, simulated) => {
             if (simulated) {
               // TODO: Save fitness to db as simulated
-              Orders.closeOrder(this.client, ticket);
             } else {
               // TODO: Save fitness to db as real
+              Orders.closeOrder(this.client, ticket);
             }
           })
         ],
