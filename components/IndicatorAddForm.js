@@ -50,24 +50,26 @@ export default class IndicatorAddForm extends Component {
           onValueChange={(itemValue, itemIndex) => this.setState({indicator: itemValue})}
         >
         <Picker.Item label="Moving Average" value="Moving Average" />
-        <Picker.Item label="MACD" value="MACD" />
+        <Picker.Item label="MACD todo.." value="MACD" />
       </Picker>
         
         <Button 
           style={{ width: '200px' }} 
           title="Add" 
           onPress={ () => { 
-            console.log(this.state.indicator, this.state.timeframe) 
-            
             let f
 
             switch(this.state.indicator) {
               case "Moving Average" : f = Indicators.average(this.state.timeframe)
                 break
+              default: throw Error("Undefined indicator!")
             }
 
-            this.props.addIndicator(this.state.indicatorName, this.state.timeframe, f)
-
+            this.props.addIndicator({
+              name: this.state.indicatorName,
+              timeframe:  this.state.timeframe,
+              f: f
+            })
           }} />
       </View>
     );

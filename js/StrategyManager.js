@@ -2,8 +2,6 @@
 const Client = require("./Client");
 const Indicators = require("./Indicators");
 const Orders = require("./Orders");
-const State = require("./State");
-const Strategy = require("./Strategy");
 const SymbolValue = require("./SymbolValue");
 const DB = require("./DB");
 
@@ -36,54 +34,17 @@ class StrategyManager {
   //////////////////////////////////////////////////////////////////
 
   /**
-   * Method creates a new Strategy
+   * Method adds strategy
    *
-   * @param {Number} strategyId
-   * @param {String} symbol
-   * @param {Array<String>} indicators
+   * @param {Object} strat
    */
-  addStrategy(strategyId, symbol, indicators) {
-    //
-    // Check if indicator is subscribed
-    indicators.forEach(i => {
-      const res = this.indicators.find(i2 => i2.name == i);
-      if (!res) throw new Error("Undefined Indicator!");
-    });
+  addStrategy(strat) {
 
-    this.positionsMap.set(strategyId, 0);
-    this.fitnessMap.set(strategyId, 0);
+    // setStrat(id , defaultValue)
+    this.positionsMap.set(strat.strategyId, 0);
+    this.fitnessMap.set(strat.strategyId, 0);
 
-    // Creates new strategy
-    this.strategies.push(
-      new Strategy(
-        strategyId,
-        [
-          new State("INIT", () => {}),
-
-          new State("SELL", (ticket, profit, simulated) => {
-            if (!simulated)
-              Orders.sell(this.client, strategyId, symbol);
-          }),
-
-          new State("BUY", (ticket, profit, simulated) => {
-            if (!simulated)
-              Orders.buy(this.client, strategyId, symbol);
-          }),
-
-          new State("CLOSE", (ticket, profit, simulated) => {
-            if (simulated) {
-              // TODO: Save fitness to db as simulated
-            } else {
-              // TODO: Save fitness to db as real
-              Orders.closeOrder(this.client, ticket);
-            }
-          })
-        ],
-        0,
-        indicators,
-        0.10
-      )
-    );
+    this.strategies.push(strat);
   }
 
   //////////////////////////////////////////////////////////////////

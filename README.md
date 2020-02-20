@@ -1,7 +1,25 @@
-# Algorithmic Trader (Bachelor Thesis)
+# Algorithmic Trader V2 (Bachelor Thesis) 
 
-- Cross-platform desktop trading application based on [Electron][elec]
+- Cross-platform desktop trading application based on [Proton][prot]
 - Connects to [MetaTrader 4][mt4] via [ZMQ][zmq] Library
+- User definable Strategies represented as Final State Machines
+
+#### 1. Strategy definition
+
+##### Moving Average Example
+
+- predicate defines when strategy should change state and execute order
+
+```javascript
+  {
+    name: "SELL",
+    predicate: (price, profit, indicators) => price < indicators.get("ma100")
+  },
+  {
+    name: "BUY",
+    predicate: (price, profit, indicators) => price >= indicators.get("ma100")
+  }
+```
 
 ### Installation
 
@@ -9,7 +27,7 @@
 
 - [Darwinex][dwx]
 
-#### 2. Electron App
+#### 2. MT Client
 
 ```console
 git clone https://github.com/jkvapil6/bc
@@ -18,27 +36,13 @@ npm install
 npm start
 ```
 
-##### If error occurs
-
-..compiled against a different Node.js version using NODE_MODULE_VERSION 72...
-
-```console
-npm install --save-dev electron-rebuild
-```
-
-Every time you run "npm install", run this:
-
-```console
-./node_modules/.bin/electron-rebuild
-```
-
 ### Documentation
 
 ```console
 npm run doc
 ```
 
-[elec]: https://electronjs.org/
+[prot]: https://github.com/kusti8/proton-native/
 [mt4]: https://www.metatrader4.com/en
 [zmq]: https://zeromq.org/
 [dwx]: https://github.com/darwinex/DarwinexLabs/tree/master/tools/dwx_zeromq_connector

@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Text, View, TextInput, StyleSheet } from "proton-native"
+import { Text, View, TextInput, StyleSheet, Button } from "proton-native"
 
 export default class ConnectionForm extends Component {
   constructor(props) {
@@ -29,6 +29,7 @@ export default class ConnectionForm extends Component {
           value={this.props.pullPort}
           onChangeText={this.props.changePullPort}
         />
+        <Button style={ { width: '200px' } } title="Connect" onPress={ () => { this.props.connect() } } />
       </View>
     );
   }
