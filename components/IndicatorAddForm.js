@@ -12,30 +12,52 @@ export default class IndicatorAddForm extends Component {
       timeframe: 100,
       indicator: "Moving Average"
     }
+
+    ///
+    /// Method handles btn click event
+    ///
+    this.addIndicator = () => { 
+      let f
+  
+      switch(this.state.indicator) {
+        case "Moving Average" : f = Indicators.average(this.state.timeframe)
+          break
+        default: throw Error("Undefined indicator!")
+      }
+  
+      this.props.addIndicator({
+        name: this.state.indicatorName,
+        timeframe:  this.state.timeframe,
+        f: f
+      })
+    }
   }
 
+  //////////////////////////////////////////////////////////
 
   render() {
     const styles = StyleSheet.create({
-      title: { fontWeight: 'bold' },
-      container: { backgroundColor: "#eeffff" }
+      container: { backgroundColor: "#ece6df" },
+      title: { fontSize: 14, fontWeight: 'bold' },
+      subtitle: { fontWeight: 'bold' },
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" },
+      btn: { width: '200px' },
+      picker: { height: 25, width: 100, backgroundColor: "#fff" }
     })
     
     return (
-      <View>
-        <Text style={{ fontWeight: 'bold' }}> Define your indicators: </Text> 
-        <Text> name: </Text> 
+      <View style={ styles.container }>
+        <Text style={ styles.title }> Define your indicators: </Text> 
+        <Text style={ styles.subtitle }> name: </Text> 
         <TextInput
-            style={{ borderWidth: 1, width: '200px' }}  
-            value={this.state.indicatorName}
-            onChangeText={(e) => {
-              this.setState({indicatorName: e})
-          }}
+            style={ styles.txtInput }  
+            value={ this.state.indicatorName }
+            onChangeText={ (e) => { this.setState({indicatorName: e}) } }
         />
 
-        <Text> timeframe: </Text> 
+        <Text style={ styles.subtitle }> timeframe: </Text> 
         <TextInput
-            style={{ borderWidth: 1, width: '200px' }}  
+            style={ styles.txtInput }  
             value={ this.state.timeframe.toString(10) }
             onChangeText={(e) => {
               const n = Number.parseInt(e)
@@ -43,34 +65,20 @@ export default class IndicatorAddForm extends Component {
             }}
         />
 
-        <Text> indicator: </Text> 
+        <Text style={ styles.subtitle }> indicator: </Text> 
         <Picker
-          selectedValue={this.state.indicator}
-          style={{height: 25, width: 100}}
-          onValueChange={(itemValue, itemIndex) => this.setState({indicator: itemValue})}
+          style={ styles.picker }
+          selectedValue={ this.state.indicator }
+          onValueChange={ (itemValue, itemIndex) => this.setState({indicator: itemValue}) }
         >
-        <Picker.Item label="Moving Average" value="Moving Average" />
-        <Picker.Item label="MACD todo.." value="MACD" />
-      </Picker>
+          <Picker.Item label="Moving Average" value="Moving Average" />
+          <Picker.Item label="MACD todo.." value="MACD" />
+        </Picker>
         
         <Button 
-          style={{ width: '200px' }} 
+          style={ styles.btn } 
           title="Add" 
-          onPress={ () => { 
-            let f
-
-            switch(this.state.indicator) {
-              case "Moving Average" : f = Indicators.average(this.state.timeframe)
-                break
-              default: throw Error("Undefined indicator!")
-            }
-
-            this.props.addIndicator({
-              name: this.state.indicatorName,
-              timeframe:  this.state.timeframe,
-              f: f
-            })
-          }} />
+          onPress={ this.addIndicator.bind(this) } />
       </View>
     );
   }

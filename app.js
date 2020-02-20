@@ -163,7 +163,9 @@ export default class MTClient extends Component {
 
   render() {
     const styles = StyleSheet.create({
-      mainWindow: { padding: 20, width: 300, height: 500, backgroundColor: "#ece6df" }
+      mainWindow: { padding: 20, width: 300, height: 500, backgroundColor: "#ece6df" },
+      subtitle: { fontWeight: 'bold' },
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" }
     })
 
     return (
@@ -185,16 +187,16 @@ export default class MTClient extends Component {
             addStrategy={ this.addStrategy.bind(this) }
           />
 
-          <Text style={ { fontWeight: 'bold' } }> Timeframe: </Text> 
+          <Text style={ styles.subtitle }> Timeframe: </Text> 
           <TextInput
-            style={ { borderWidth: 1, width: '200px' } }  
+            style={ styles.txtInput }  
             value={ this.state.timeframe }
             onChangeText={ this.changeTimeframe.bind(this) } 
           />
           
           <View>
-            <Text style={ { fontWeight: 'bold' } }> ask: { this.state.txtBid } </Text>
-            <Text style={ { fontWeight: 'bold' } }> bid: { this.state.txtAsk } </Text>
+            <Text style={ styles.subtitle }> ask: { this.state.txtBid } </Text>
+            <Text style={ styles.subtitle }> bid: { this.state.txtAsk } </Text>
           </View>
           <OpenedTrades trades={ this.state.openedTrades } />
         </Window>

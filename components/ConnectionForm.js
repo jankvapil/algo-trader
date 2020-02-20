@@ -8,28 +8,33 @@ export default class ConnectionForm extends Component {
     this.state = {}
   }
 
+  //////////////////////////////////////////////////////////
+
   render() {
     const styles = StyleSheet.create({
-      title: { fontWeight: 'bold' },
-      container: { backgroundColor: "#eeffff" }
+      container: { backgroundColor: "#ece6df" },
+      title: { fontSize: 14, fontWeight: 'bold' },
+      subtitle: { fontWeight: 'bold' },
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" },
+      btn: { width: '200px' }
     })
     
     return (
-      <View style={ styles.viewConnect }>
-        <Text style={ {fontSize: 14, fontWeight: 'bold'} }> MetaTrader Connection </Text>
-        <Text style={{ fontWeight: 'bold' }}> ReqPort: </Text> 
+      <View style={ styles.container }>
+        <Text style={ styles.title }> MetaTrader Connection </Text>
+        <Text style={ styles.subtitle }> ReqPort: </Text> 
         <TextInput
-          style={{ borderWidth: 1, width: '200px' }}
-          value={this.props.reqPort}
-          onChangeText={this.props.changeReqPort}
+          style={ styles.txtInput }
+          value={ this.props.reqPort }
+          onChangeText={ this.props.changeReqPort }
         />
-        <Text style={{ fontWeight: 'bold' }}> PullPort: </Text> 
+        <Text style={ styles.subtitle }> PullPort: </Text> 
         <TextInput
-          style={{ borderWidth: 1, width: '200px' }}
-          value={this.props.pullPort}
-          onChangeText={this.props.changePullPort}
+          style={ styles.txtInput }
+          value={ this.props.pullPort}
+          onChangeText={ this.props.changePullPort }
         />
-        <Button style={ { width: '200px' } } title="Connect" onPress={ () => { this.props.connect() } } />
+        <Button style={ styles.btn } title="Connect" onPress={ () => { this.props.connect() } } />
       </View>
     );
   }

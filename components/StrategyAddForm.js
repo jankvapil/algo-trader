@@ -9,16 +9,42 @@ export default class StrategyAddForm extends Component {
     super(props)
 
     this.state = {
+      strategyId: 0,
+      initState: 0,
+      maxProfitRange: 0.10,
+      sellPredicate: `price < indicators.get("ma100")`,
+      buyPredicate: `price >= indicators.get("ma100")`
+    }
+
+    ///
+    /// Method handles btn click event
+    ///
+    this.addStrategy = () => { 
+      //
+      // TODO: Indicators Selection
+      const usedIndicators = this.props.indicators.map(i => i.name)
+      console.log(usedIndicators)
+
+      // Create new strategy (id, symbol, usedIndicators)
+      const s = this.createStrategy(usedIndicators, this.props.client, this.props.symbol)
+
+      // TODO
+      this.defineStrategy(s)
+
+      this.props.addStrategy(s)
     }
   }
   
   //////////////////////////////////////////////////////////
 
+  ///
+  /// TODO
+  ///
   createStrategy(indicators, client, symbol) {
 
     // Creates new strategy
     const strat = new Strategy(
-      strategyId,
+      this.state.strategyId,
       [
         new State("INIT", () => {}),
 
@@ -41,9 +67,9 @@ export default class StrategyAddForm extends Component {
           }
         })
       ],
-      0,
+      this.state.initState,
       indicators,
-      0.10
+      this.state.maxProfitRange
     )
 
     return strat;
@@ -51,39 +77,61 @@ export default class StrategyAddForm extends Component {
 
   //////////////////////////////////////////////////////////
 
-  // TODO
+  ///
+  /// TODO
+  ///
   defineStrategy(s) {
 
+    let buyStr = `(price, profit, indicators) => `.concat(this.state.buyPredicate)
+
+    let sellStr = `(price, profit, indicators) => `.concat(this.state.sellPredicate)
+
+    console.log(buyStr)
+
+    console.log(sellStr)
+    
   }
 
   //////////////////////////////////////////////////////////
 
   render() {
     const styles = StyleSheet.create({
-      title: { fontWeight: 'bold' },
-      container: { backgroundColor: "#eeffff" }
+      container: { backgroundColor: "#ece6df" },
+      title: { fontSize: 14, fontWeight: 'bold' },
+      subtitle: { fontWeight: 'bold' },
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" },
+      btn: { width: '200px' },
+      txtInputStrategyDef: { borderWidth: 1, width: '200px', height: '50px' , backgroundColor: "#fff" }
     })
     
     return (
-      <View>
-        <Text style={{ fontWeight: 'bold' }}> Define your strategy: </Text>
+      <View style={ styles.container }>
+        <Text style={ styles.title }> Define your strategy: </Text>
+        <Text style={ styles.subtitle }> Strategy ID: </Text>
+        <TextInput 
+            style={ styles.txtInput }
+            value={ this.state.strategyId }
+        />
+        <Text style={ styles.subtitle }> Max Profit Range: </Text>
+        <TextInput 
+            style={ styles.txtInput }
+            value={ this.state.maxProfitRange }
+        />
+        <Text style={ styles.subtitle }> SELL Predicate: </Text>
+        <TextInput 
+            style={ styles.txtInputStrategyDef }
+            value={ this.state.sellPredicate }
+        />
+        <Text style={ styles.subtitle }> BUY Predicate: </Text>
+        <TextInput 
+            style={ styles.txtInputStrategyDef }
+            value={ this.state.buyPredicate }
+        />
         <Button 
-          style={{ width: '200px' }} 
-          title="Add" 
-          onPress={ () => { 
-            this.props.indicators.map(i => console.log(i))
-
-            // Create new strategy (id, symbol, usedIndicators)
-            const usedIndicators = this.props.indicators.map(i => i.name)
-            console.log(usedIndicators)
-
-            const s = this.createStrategy(usedIndicators, this.props.client, this.props.symbol)
-
-            // TODO
-            this.defineStrategy(s)
-
-            this.props.addStrategy(s)
-          }} />
+          style={ styles.btn }
+          title="Add"
+          onPress={ this.addStrategy.bind(this) } 
+        />
       </View> 
     );
   }

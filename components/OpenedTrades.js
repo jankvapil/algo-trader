@@ -11,7 +11,7 @@ export default class OpenedTrades extends Component {
   render() {
     const styles = StyleSheet.create({
       title: { fontWeight: 'bold' },
-      container: { backgroundColor: "#eeffff" }
+      container: { backgroundColor: "#ece6df" }
     })
     
     const tradesTable = this.props.trades.map(trade => (
