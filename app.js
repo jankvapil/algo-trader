@@ -21,7 +21,7 @@ export default class MTClient extends Component {
       symbol: "EURUSD",
       reqPort: "5555",
       pullPort: "5556",
-      timeframe: "3000",
+      timeframe: "1000",
       txtBid: "",
       txtAsk: "",
       indicators: [],
@@ -76,6 +76,8 @@ export default class MTClient extends Component {
     // SEND ORDER TO CLOSE ALL POSITIONS WITH THIS ID
     // const openedTrades = this.state.client.getOpenedTrades() ..
 
+    const client = this.state.client;
+    const symbol = this.state.symbol;
 
     // Set monitoring symbol & get reference on the array
     this.setState({symbolArr : client.setSymbolMonitoring(symbol)})
@@ -88,7 +90,7 @@ export default class MTClient extends Component {
 
     // Set monitored symbol's array length (don't need longer array than max timeframe)
     const maxTimeframe = Math.max(... this.state.indicators.map(i => i.timeframe))
-    this.client.setDbMaxLength(maxTimeframe)
+    client.setDbMaxLength(maxTimeframe)
 
     setInterval(() => { this.mainLoop(strategyManager) }, this.state.timeframe)
   }
@@ -163,14 +165,15 @@ export default class MTClient extends Component {
 
   render() {
     const styles = StyleSheet.create({
-      mainWindow: { padding: 20, width: 300, height: 500, backgroundColor: "#ece6df" },
+      mainWindow: { padding: 20, width: 300, height: 700, backgroundColor: "#ece6df" },
       subtitle: { fontWeight: 'bold' },
-      txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" }
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" },
+      btn: { width: '200px' }
     })
 
     return (
       <App>
-        <Window style={ styles.mainWindow }>
+        <Window title="MT Client" style={ styles.mainWindow }>
           <ConnectionForm 
             pullPort={ this.state.pullPort } 
             reqPort={ this.state.reqPort } 
@@ -193,7 +196,10 @@ export default class MTClient extends Component {
             value={ this.state.timeframe }
             onChangeText={ this.changeTimeframe.bind(this) } 
           />
-          
+           <Button 
+            style={ styles.btn } 
+            title="Start" 
+            onPress={ this.startLoop.bind(this) } />
           <View>
             <Text style={ styles.subtitle }> ask: { this.state.txtBid } </Text>
             <Text style={ styles.subtitle }> bid: { this.state.txtAsk } </Text>

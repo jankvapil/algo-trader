@@ -4,22 +4,34 @@
 - Connects to [MetaTrader 4][mt4] via [ZMQ][zmq] Library
 - User definable Strategies represented as Final State Machines
 
-#### 1. Strategy definition
 
-##### Moving Average Example
+#### 1. Indicator definition
 
+- define your indicators by selecting indicator type (Moving Average), setting its period and defining unique name
+
+#### 2. Strategy definition
+
+- use your defined indicators in strategy definition
 - predicate defines when strategy should change state and execute order
 
 ```javascript
-  {
-    name: "SELL",
-    predicate: (price, profit, indicators) => price < indicators.get("ma100")
-  },
-  {
-    name: "BUY",
-    predicate: (price, profit, indicators) => price >= indicators.get("ma100")
-  }
+
+  // SELL predicate  
+  price < indicators.get("ma100")
+
 ```
+
+```javascript
+
+  // BUY predicate
+  price >= indicators.get("ma100")
+
+```
+
+#### 3. Connect to MetaTrader and start automatic trading
+
+- via ZMQ tcp socket
+- select appropriate timeframe (> 500ms)
 
 ### Installation
 

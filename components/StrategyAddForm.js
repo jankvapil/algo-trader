@@ -3,6 +3,7 @@ import { Picker, StyleSheet, View, Text, Button, TextInput } from "proton-native
 
 const Strategy = require("../js/Strategy");
 const State = require("../js/State");
+const Orders = require("../js/Orders");
 
 export default class StrategyAddForm extends Component {
   constructor(props) {
@@ -12,8 +13,8 @@ export default class StrategyAddForm extends Component {
       strategyId: 0,
       initState: 0,
       maxProfitRange: 0.10,
-      sellPredicate: `price < indicators.get("ma100")`,
-      buyPredicate: `price >= indicators.get("ma100")`
+      sellPredicate: `price < indicators.get("ma10")`,
+      buyPredicate: `price >= indicators.get("ma10")`
     }
 
     ///
@@ -28,9 +29,7 @@ export default class StrategyAddForm extends Component {
       // Create new strategy (id, symbol, usedIndicators)
       const s = this.createStrategy(usedIndicators, this.props.client, this.props.symbol)
 
-      // TODO
       this.defineStrategy(s)
-
       this.props.addStrategy(s)
     }
   }
@@ -38,11 +37,9 @@ export default class StrategyAddForm extends Component {
   //////////////////////////////////////////////////////////
 
   ///
-  /// TODO
+  /// Creates new strategy
   ///
   createStrategy(indicators, client, symbol) {
-
-    // Creates new strategy
     const strat = new Strategy(
       this.state.strategyId,
       [
@@ -50,12 +47,12 @@ export default class StrategyAddForm extends Component {
 
         new State("SELL", (ticket, profit, simulated) => {
           if (!simulated)
-            Orders.sell(client, strategyId, symbol);
+            Orders.sell(client, this.state.strategyId, symbol);
         }),
 
         new State("BUY", (ticket, profit, simulated) => {
           if (!simulated)
-            Orders.buy(client, strategyId, symbol);
+            Orders.buy(client, this.state.strategyId, symbol);
         }),
 
         new State("CLOSE", (ticket, profit, simulated) => {
@@ -78,18 +75,13 @@ export default class StrategyAddForm extends Component {
   //////////////////////////////////////////////////////////
 
   ///
-  /// TODO
+  /// Defines strategy by SELL / BUY transitions
   ///
   defineStrategy(s) {
-
-    let buyStr = `(price, profit, indicators) => `.concat(this.state.buyPredicate)
-
-    let sellStr = `(price, profit, indicators) => `.concat(this.state.sellPredicate)
-
-    console.log(buyStr)
-
-    console.log(sellStr)
-    
+    s.setTransitions(
+      eval(`(price, profit, indicators) => `.concat(this.state.sellPredicate)),
+      eval(`(price, profit, indicators) => `.concat(this.state.buyPredicate))
+    );   
   }
 
   //////////////////////////////////////////////////////////
@@ -120,11 +112,13 @@ export default class StrategyAddForm extends Component {
         <Text style={ styles.subtitle }> SELL Predicate: </Text>
         <TextInput 
             style={ styles.txtInputStrategyDef }
+            multiline={ true } 
             value={ this.state.sellPredicate }
         />
         <Text style={ styles.subtitle }> BUY Predicate: </Text>
         <TextInput 
             style={ styles.txtInputStrategyDef }
+            multiline={ true } 
             value={ this.state.buyPredicate }
         />
         <Button 

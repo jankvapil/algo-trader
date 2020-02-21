@@ -64,16 +64,35 @@ class Strategy {
     ];
   }
 
+  ///////////////////////////////////////////////////////////
+
+  /**
+   * Setter defines strategy
+   * 
+   * @param {() => boolean} sellPredicate 
+   * @param {() => boolean} buyPredicate 
+   */
+  setTransitions(sellPredicate, buyPredicate) {
+    this.transitions[0].nextStates[0].predicate = sellPredicate
+    this.transitions[0].nextStates[1].predicate = buyPredicate
+  }
+
+  ///////////////////////////////////////////////////////////
+
   /**
    * Reference on indicators
+   * 
    * @returns {Array<String>}
    */
   getIndicators() {
     return this.indicators;
   }
 
+  ///////////////////////////////////////////////////////////
+
   /**
    * Updates state by the transition table.
+   * 
    * @param {Number} ticket - ticket of current strategy
    * @param {Number} price - current price
    * @param {Number} profit - current profit

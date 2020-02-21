@@ -8,8 +8,8 @@ export default class IndicatorAddForm extends Component {
     super(props)
 
     this.state = {
-      indicatorName: "ma100",
-      timeframe: 100,
+      indicatorName: "ma10",
+      timeframe: 10,
       indicator: "Moving Average"
     }
 
