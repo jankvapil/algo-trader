@@ -16,39 +16,47 @@ exports.rates =
 
 exports.buy =
   /**
-   * Sends trade buy order to MT Client
+   * Sends buy order to MT Client
+   *       TRADE|ACTION|TYPE|SYMBOL|PRICE|SL|TP|COMMENT|TICKET
+   *  e.g. TRADE|OPEN|1|EURUSD|0|50|50|R-to-MetaTrader4|12345678
    *
    * @param {Client} client
    * @param {Number} id
    * @param {String} symbol
+   * @param {Number} lotSize
    *
    * @todo Create unique identifier
    */
-  (client, id, symbol) => {
+  (client, id, symbol, lotSize, stopLoss, takeProfit) => {
     let req = "TRADE|OPEN|0|"
       .concat(symbol)
-      .concat("|0|0|0|")
+      .concat(`|0|${stopLoss}|${takeProfit}|`)
       .concat(`${id}`)
-      .concat("|0.01|123456|0");
+      .concat(`|${lotSize}|123456|0`);
+    
+    console.log(req)
     client.sendMsg(req);
   };
 
 exports.sell =
   /**
-   * Sends trade sell order to MT Client
+   * Sends sell order to MT Client
    *
    * @param {Client} client
    * @param {Number} id
    * @param {String} symbol
+   * @param {Number} lotSize
    *
    * @todo Create unique identifier
    */
-  (client, id, symbol) => {
+  (client, id, symbol, lotSize, stopLoss, takeProfit) => {
     let req = "TRADE|OPEN|1|"
       .concat(symbol)
-      .concat("|0|0|0|")
+      .concat(`|0|${stopLoss}|${takeProfit}|`)
       .concat(`${id}`)
-      .concat("|0.01|123456|0");
+      .concat(`|${lotSize}|123456|0`);
+
+    console.log(req) 
     client.sendMsg(req);
   };
 

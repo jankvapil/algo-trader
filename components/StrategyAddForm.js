@@ -10,9 +10,12 @@ export default class StrategyAddForm extends Component {
     super(props)
 
     this.state = {
-      strategyId: 0,
+      strategyId: 1,
       initState: 0,
       maxProfitRange: 0.10,
+      stopLoss: 10,
+      takeProfit: 10,
+      lotSize: 0.01,
       sellPredicate: `price < indicators.get("ma10")`,
       buyPredicate: `price >= indicators.get("ma10")`
     }
@@ -22,9 +25,13 @@ export default class StrategyAddForm extends Component {
     ///
     this.addStrategy = () => { 
       //
-      // TODO: Indicators Selection
+      // Choose used indicators
       const usedIndicators = this.props.indicators.map(i => i.name)
-      console.log(usedIndicators)
+      
+      // TODO: HANDLE THIS ERROR
+      if (this.state.strategyId == 0) {
+        throw Error("Strategies defined as 0 are manually placed!")
+      }
 
       // Create new strategy (id, symbol, usedIndicators)
       const s = this.createStrategy(usedIndicators, this.props.client, this.props.symbol)
@@ -40,28 +47,40 @@ export default class StrategyAddForm extends Component {
   /// Creates new strategy
   ///
   createStrategy(indicators, client, symbol) {
+
+    console.log(`New strategy created.
+      ID: ${ this.state.strategyId }
+      MPR: ${ this.state.maxProfitRange }
+      SL: ${ this.state.stopLoss }
+      TP: ${ this.state.takeProfit }
+      SELL: ${ this.state.sellPredicate }
+      BUY: ${ this.state.buyPredicate } `)
+
     const strat = new Strategy(
       this.state.strategyId,
       [
         new State("INIT", () => {}),
 
-        new State("SELL", (ticket, profit, simulated) => {
-          if (!simulated)
-            Orders.sell(client, this.state.strategyId, symbol);
+        new State("SELL", () => {
+            Orders.sell(
+              client,
+              this.state.strategyId,
+              symbol,
+              this.state.lotSize,
+              this.state.stopLoss,
+              this.state.takeProfit
+            );
         }),
 
-        new State("BUY", (ticket, profit, simulated) => {
-          if (!simulated)
-            Orders.buy(client, this.state.strategyId, symbol);
-        }),
-
-        new State("CLOSE", (ticket, profit, simulated) => {
-          if (simulated) {
-            // TODO: Save fitness to db as simulated
-          } else {
-            // TODO: Save fitness to db as real
-            Orders.closeOrder(client, ticket);
-          }
+        new State("BUY", () => {
+            Orders.buy(
+              client,
+              this.state.strategyId,
+              symbol,
+              this.state.lotSize,
+              this.state.stopLoss,
+              this.state.takeProfit
+            );
         })
       ],
       this.state.initState,
@@ -79,8 +98,8 @@ export default class StrategyAddForm extends Component {
   ///
   defineStrategy(s) {
     s.setTransitions(
-      eval(`(price, profit, indicators) => `.concat(this.state.sellPredicate)),
-      eval(`(price, profit, indicators) => `.concat(this.state.buyPredicate))
+      eval(`(price, indicators) => `.concat(this.state.sellPredicate)),
+      eval(`(price, indicators) => `.concat(this.state.buyPredicate))
     );   
   }
 
@@ -103,23 +122,44 @@ export default class StrategyAddForm extends Component {
         <TextInput 
             style={ styles.txtInput }
             value={ this.state.strategyId }
+            onChangeText={ (e) => { 
+              this.setState({ strategyId: e }) } 
+            }
         />
         <Text style={ styles.subtitle }> Max Profit Range: </Text>
+
+        <Text style={ styles.subtitle }> Stop Loss: </Text>
         <TextInput 
             style={ styles.txtInput }
-            value={ this.state.maxProfitRange }
+            value={ this.state.stopLoss }
+            onChangeText={ (e) => { this.setState({ stopLoss: e }) } }
+        />
+        <Text style={ styles.subtitle }> Take Profit: </Text>
+        <TextInput 
+            style={ styles.txtInput }
+            value={ this.state.takeProfit }
+            onChangeText={ (e) => { this.setState({ takeProfit: e }) } }
+        />
+
+        <Text style={ styles.subtitle }> Lot Size: </Text>
+        <TextInput 
+            style={ styles.txtInput }
+            value={ this.state.lotSize }
+            onChangeText={ (e) => { this.setState({ lotSize: e }) } }
         />
         <Text style={ styles.subtitle }> SELL Predicate: </Text>
         <TextInput 
             style={ styles.txtInputStrategyDef }
             multiline={ true } 
             value={ this.state.sellPredicate }
+            onChangeText={ (e) => { this.setState({ sellPredicate: e }) } }
         />
         <Text style={ styles.subtitle }> BUY Predicate: </Text>
         <TextInput 
             style={ styles.txtInputStrategyDef }
             multiline={ true } 
             value={ this.state.buyPredicate }
+            onChangeText={ (e) => { this.setState({ buyPredicate: e }) } }
         />
         <Button 
           style={ styles.btn }

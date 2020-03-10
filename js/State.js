@@ -16,12 +16,9 @@ class State {
 
   /**
    * Apply transition function
-   * @param {number} ticket
-   * @param {number} profit
-   * @param {number} simulated
    */
-  applyTransition(ticket, profit, simulated) {
-    this.transFun(ticket, profit, simulated);
+  applyTransition() {
+    this.transFun();
   }
 }
 

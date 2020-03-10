@@ -69,10 +69,15 @@ class StrategyManager {
     const keys = Object.keys(openedTrades);
     const target = 0.1;
 
+  
+
     // key == ticket (identificator of order)
     for (const key of keys) {
       const values = openedTrades[key];
-      if (values.comment == id) return {key: key, profit: values.pnl}
+      if (values.comment == id) {
+        console.log(`${values.comment} = ${id}..?`)
+        return {key: key, profit: values.pnl}
+      }
     }
     return {key: 'init-state', profit: 0.0}
   }
@@ -124,12 +129,12 @@ class StrategyManager {
       ///////////////////////////////////////////////////
       
       // Need to get strategy ticket 
-      const ticket = this.getTicketByStrategyId(openedTrades, s.id);
-      console.log(ticket);
+      // const ticket = this.getTicketByStrategyId(openedTrades, s.id);
+      // console.log(ticket);
 
-      const simulated = this.isSimulated(s.id);
+      // const simulated = this.isSimulated(s.id);
 
-      s.updateState(ticket.key, lastPrice, ticket.profit, tempMap, simulated);
+      s.updateState(lastPrice, tempMap);
     });
   }
 }

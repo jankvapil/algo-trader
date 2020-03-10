@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "proton-native": "^2.0.4",
+    "react-tradingview-widget": "^1.3.2",
     "zeromq": "^5.2.0"
   },
   "devDependencies": {

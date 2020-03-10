@@ -26,11 +26,11 @@ class Strategy {
         nextStates: [
           {
             name: "SELL",
-            predicate: (price, profit, indicators) => price < indicators.get("ma100")
+            predicate: (price, indicators) => price < indicators.get("ma100")
           },
           {
             name: "BUY",
-            predicate: (price, profit, indicators) => price >= indicators.get("ma100")
+            predicate: (price, indicators) => price >= indicators.get("ma100")
           }
         ]
       },
@@ -38,8 +38,8 @@ class Strategy {
         name: "SELL",
         nextStates: [
           {
-            name: "CLOSE",
-            predicate: (price, profit, indicators) => Math.abs(profit) > this.maxProfitRange 
+            name: "BUY",
+            predicate: (price, indicators) => price >= indicators.get("ma100")
           }
         ]
       },
@@ -47,20 +47,11 @@ class Strategy {
         name: "BUY",
         nextStates: [
           {
-            name: "CLOSE",
-            predicate: (price, profit, indicators) => Math.abs(profit) > this.maxProfitRange 
+            name: "SELL",
+            predicate: (price, indicators) => price < indicators.get("ma100")
           }
         ]
       },
-      {
-        name: "CLOSE",
-        nextStates: [
-          {
-            name: "INIT",
-            predicate: (price, profit, indicators) => true
-          }
-        ]
-      }
     ];
   }
 
@@ -75,6 +66,8 @@ class Strategy {
   setTransitions(sellPredicate, buyPredicate) {
     this.transitions[0].nextStates[0].predicate = sellPredicate
     this.transitions[0].nextStates[1].predicate = buyPredicate
+    this.transitions[1].nextStates[0].predicate = buyPredicate
+    this.transitions[2].nextStates[0].predicate = sellPredicate
   }
 
   ///////////////////////////////////////////////////////////
@@ -93,15 +86,11 @@ class Strategy {
   /**
    * Updates state by the transition table.
    * 
-   * @param {Number} ticket - ticket of current strategy
    * @param {Number} price - current price
-   * @param {Number} profit - current profit
    * @param {Map} indicatorsValuesMap
-   * @param {Number} simulated 
    */
-  updateState(ticket, price, profit, indicatorsValuesMap, simulated) {
-    console.log("price: ");
-    console.log(price);
+  updateState(price, indicatorsValuesMap) {
+    console.log(`price: ${ price }`);
     console.log("indicatorsValuesMap: ");
     console.log(indicatorsValuesMap);
     console.log("current state:");
@@ -118,9 +107,12 @@ class Strategy {
           //
           // Skip the current state
           if (ns.name == this.state.name) continue;
+
+          console.log(ns.predicate.toString())
+          console.log(`nextState f: ${ns.predicate(price, indicatorsValuesMap)} `)
           //
           // If predicate is satisfied
-          if (ns.predicate(price, profit, indicatorsValuesMap)) {
+          if (ns.predicate(price, indicatorsValuesMap)) {
             //
             // set the current state and finish update
             this.state = this.states.find(obj => {
@@ -129,7 +121,7 @@ class Strategy {
 
             console.log("---- new state:");
             console.log(this.state);
-            this.state.applyTransition(ticket, profit, simulated);
+            this.state.applyTransition();
             return;
           }
         }

@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 import { Window, App, Text, Button, View, StyleSheet, TextInput, Dialog  } from "proton-native"
+// import TradingViewWidget from 'react-tradingview-widget'
+
 import OpenedTrades from "./components/OpenedTrades"
 import SymbolPicker from "./components/SymbolPicker"
 import ConnectionForm from "./components/ConnectionForm"
@@ -14,6 +16,9 @@ const Indicators = require("./js/Indicators")
 export default class MTClient extends Component {
   constructor(props) {
     super(props)
+
+    // console.log("Args:")
+    // console.log(process.argv)
 
     // Global App State
     this.state = {
@@ -174,6 +179,7 @@ export default class MTClient extends Component {
     return (
       <App>
         <Window title="MT Client" style={ styles.mainWindow }>
+          {/* <TradingViewWidget symbol="NASDAQ:AAPL" /> */}
           <ConnectionForm 
             pullPort={ this.state.pullPort } 
             reqPort={ this.state.reqPort } 
