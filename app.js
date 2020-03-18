@@ -13,6 +13,8 @@ const Orders = require("./js/Orders")
 const StrategyManager = require("./js/StrategyManager")
 const Indicators = require("./js/Indicators")
 
+const fs = require('fs');
+
 export default class MTClient extends Component {
   constructor(props) {
     super(props)
@@ -30,6 +32,7 @@ export default class MTClient extends Component {
       txtBid: "",
       txtAsk: "",
       indicators: [],
+      uninitIndicators: [],
       strategies: [],
       openedTrades: [],
       symbolArr: [],
@@ -165,12 +168,26 @@ export default class MTClient extends Component {
     }
   }
 
+  //////////////////////////////////////////////////////////
+
+  ///
+  /// This uninitialized indicators will be saved to file
+  /// with strategy which uses this indicator
+  ///
+  saveIndicator(indicatorName, timeframe, indicator) {
+    this.state.uninitIndicators.push({
+      indicatorName: indicatorName,
+      timeframe: timeframe,
+      indicator: indicator
+    })
+  }
+
   ///////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////
 
   render() {
     const styles = StyleSheet.create({
-      mainWindow: { padding: 20, width: 300, height: 700, backgroundColor: "#ece6df" },
+      mainWindow: { padding: 20, width: 300, height: 800, backgroundColor: "#ece6df" },
       subtitle: { fontWeight: 'bold' },
       txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" },
       btn: { width: '200px' }
@@ -188,24 +205,29 @@ export default class MTClient extends Component {
             connect={ this.connect.bind(this) }
           />
           <SymbolPicker changeSymbol={ this.changeSymbol.bind(this) } />
-          <IndicatorAddForm addIndicator={ this.addIndicator.bind(this) } />
+          <IndicatorAddForm 
+            addIndicator={ this.addIndicator.bind(this) } 
+            saveIndicator={ this.saveIndicator.bind(this) }
+          />
           <StrategyAddForm 
             client={ this.state.client }
             symbol={ this.state.symbol }
             indicators={ this.state.indicators }
+            uninitIndicators= { this.state.uninitIndicators }
             addStrategy={ this.addStrategy.bind(this) }
           />
-
+          
           <Text style={ styles.subtitle }> Timeframe: </Text> 
           <TextInput
             style={ styles.txtInput }  
             value={ this.state.timeframe }
             onChangeText={ this.changeTimeframe.bind(this) } 
           />
-           <Button 
+          <Button 
             style={ styles.btn } 
             title="Start" 
             onPress={ this.startLoop.bind(this) } />
+          
           <View>
             <Text style={ styles.subtitle }> ask: { this.state.txtBid } </Text>
             <Text style={ styles.subtitle }> bid: { this.state.txtAsk } </Text>

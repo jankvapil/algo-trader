@@ -30,6 +30,12 @@ export default class IndicatorAddForm extends Component {
         timeframe:  this.state.timeframe,
         f: f
       })
+
+      this.props.saveIndicator(
+        this.state.indicatorName,
+        this.state.timeframe,
+        this.state.indicator
+      )
     }
   }
 
