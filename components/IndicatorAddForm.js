@@ -28,14 +28,9 @@ export default class IndicatorAddForm extends Component {
       this.props.addIndicator({
         name: this.state.indicatorName,
         timeframe:  this.state.timeframe,
+        type: this.state.indicator,
         f: f
       })
-
-      this.props.saveIndicator(
-        this.state.indicatorName,
-        this.state.timeframe,
-        this.state.indicator
-      )
     }
   }
 
@@ -86,6 +81,6 @@ export default class IndicatorAddForm extends Component {
           title="Add" 
           onPress={ this.addIndicator.bind(this) } />
       </View>
-    );
+    )
   }
 }

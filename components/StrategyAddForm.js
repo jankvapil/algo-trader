@@ -1,11 +1,11 @@
 import React, { Component } from "react"
 import { Picker, StyleSheet, View, Text, Button, TextInput } from "proton-native"
 
-const Strategy = require("../js/Strategy");
-const State = require("../js/State");
-const Orders = require("../js/Orders");
+const Strategy = require("../js/Strategy")
+const State = require("../js/State")
+const Orders = require("../js/Orders")
 
-const fs = require('fs');
+const fs = require('fs')
 
 export default class StrategyAddForm extends Component {
   constructor(props) {
@@ -69,7 +69,7 @@ export default class StrategyAddForm extends Component {
               this.state.lotSize,
               this.state.stopLoss,
               this.state.takeProfit
-            );
+            )
         }),
 
         new State("BUY", () => {
@@ -80,7 +80,7 @@ export default class StrategyAddForm extends Component {
               this.state.lotSize,
               this.state.stopLoss,
               this.state.takeProfit
-            );
+            )
         })
       ],
       this.state.initState,
@@ -88,7 +88,7 @@ export default class StrategyAddForm extends Component {
       this.state.maxProfitRange
     )
 
-    return strat;
+    return strat
   }
 
   //////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ export default class StrategyAddForm extends Component {
     s.setTransitions(
       eval(`(price, indicators) => `.concat(this.state.sellPredicate)),
       eval(`(price, indicators) => `.concat(this.state.buyPredicate))
-    );   
+    )   
   }
 
   //////////////////////////////////////////////////////////
@@ -109,11 +109,19 @@ export default class StrategyAddForm extends Component {
   /// Saves strategy to JSON file
   ///
   saveStrategy() {
+
+    const usedIndicators = this.props.indicators.map(i => {
+      return {
+        name: i.name,
+        timeframe: i.timeframe,
+        type: i.type
+      }
+    })
+
     const savedStrat = {
       id: this.state.strategyId,
-      indicators: this.props.uninitIndicators,
+      indicators: usedIndicators,
       strategy: {
-        symbol: this.props.symbol,
         sl: this.state.stopLoss,
         tp: this.state.takeProfit,
         lotSize: this.state.lotSize,
@@ -127,15 +135,15 @@ export default class StrategyAddForm extends Component {
             console.log("File read failed:", err)
             return
         }
-        const json = JSON.parse(data);
+        const json = JSON.parse(data)
 
         json.map(i => {
           if (i.id == this.state.strategyId) 
-            throw Error(`Chose unique indentifier of strategy. Strategy ${i.id} is already defined!`)
+            throw Error(`Choose unique identifier of strategy. Strategy ${i.id} is already defined!`)
         })
 
         json.push(savedStrat)
-        console.log(json)
+        // console.log(json)
 
         const str = JSON.stringify(json, null, 2)
 
@@ -145,6 +153,7 @@ export default class StrategyAddForm extends Component {
     })
   }
 
+  //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
   render() {
@@ -214,6 +223,6 @@ export default class StrategyAddForm extends Component {
           onPress={ this.addStrategy.bind(this) } 
         />
       </View> 
-    );
+    )
   }
 }

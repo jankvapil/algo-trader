@@ -11,7 +11,7 @@ export default class OpenedTrades extends Component {
   render() {
     const styles = StyleSheet.create({
       title: { fontWeight: 'bold' },
-      container: { backgroundColor: "#ece6df" }
+      container: { backgroundColor: '#ece6df' }
     })
     
     const tradesTable = this.props.trades.map(trade => (
@@ -22,10 +22,10 @@ export default class OpenedTrades extends Component {
     ))
 
     return (
-        <View style={ styles.container }>
+      <View style={ styles.container }>
         <Text style={ styles.title }>Opened Trades:</Text>
         { tradesTable }
-        </View>
+      </View>
     );
   }
 }

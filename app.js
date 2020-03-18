@@ -1,19 +1,15 @@
 import React, { Component } from "react"
-import { Window, App, Text, Button, View, StyleSheet, TextInput, Dialog  } from "proton-native"
-// import TradingViewWidget from 'react-tradingview-widget'
+import { Window, App, Text, Button, View, StyleSheet, TextInput, } from "proton-native"
 
-import OpenedTrades from "./components/OpenedTrades"
-import SymbolPicker from "./components/SymbolPicker"
 import ConnectionForm from "./components/ConnectionForm"
 import IndicatorAddForm from "./components/IndicatorAddForm"
 import StrategyAddForm from "./components/StrategyAddForm"
+import UseExistingStrategy from "./components/UseExistingStrategy"
+import StrategySettings from './components/StrategySettings'
 
 const Client = require("./js/Client")
-const Orders = require("./js/Orders")
-const StrategyManager = require("./js/StrategyManager")
-const Indicators = require("./js/Indicators")
 
-const fs = require('fs');
+const fs = require("fs")
 
 export default class MTClient extends Component {
   constructor(props) {
@@ -25,89 +21,29 @@ export default class MTClient extends Component {
     // Global App State
     this.state = {
       connected: false,
-      symbol: "EURUSD",
       reqPort: "5555",
       pullPort: "5556",
-      timeframe: "1000",
-      txtBid: "",
-      txtAsk: "",
       indicators: [],
-      uninitIndicators: [],
       strategies: [],
-      openedTrades: [],
-      symbolArr: [],
-      client: undefined
+      client: undefined,
+      connActive: false
     }
 
-    ///
-    /// Main Loop..
-    ///
-    this.mainLoop = (strategyManager) => {
-      // Request for opened trades
-      Orders.getOpenedTrades(this.state.client)
-      //
-      // Request for update symbol rates
-      Orders.rates(this.state.client, this.state.symbol)
-
-      const symbolArr = this.state.symbolArr
-      const lastPrice = symbolArr[symbolArr.length - 1]
-      const openedTrades = this.state.client.getOpenedTrades()
-      
-      if (lastPrice) {
-        //
-        // Sends event to all strategies
-        strategyManager.sendEvent(openedTrades, symbolArr)
-        //
-        // Update app state
-        this.setState({
-          txtBid: lastPrice.bid,
-          txtAsk: lastPrice.ask,
-          openedTrades: Object.values(openedTrades)
-        })
+    // Check if strategies.json exists. If not - init json.
+    fs.access("./strategies.json", fs.F_OK, (err) => {
+      if (err) {
+        fs.writeFile("strategies.json", "[]", "utf8", () =>
+          console.log("Initializing strategies.json file..")
+        )
       }
-    }
-  }
-
-  //////////////////////////////////////////////////////////
-  /////////////////////// UI Events ////////////////////////
-
-  // Fire main-event loop
-  startLoop() {
-    
-    if (!this.state.connected) throw Error("Client is not connected!")
-
-    //
-    // TODO:
-    //
-    // CHECK IF THERE IS NO STRATEGIES INDENTIFIED BY SAME ID !!!
-    // or
-    // SEND ORDER TO CLOSE ALL POSITIONS WITH THIS ID
-    // const openedTrades = this.state.client.getOpenedTrades() ..
-
-    const client = this.state.client;
-    const symbol = this.state.symbol;
-
-    // Set monitoring symbol & get reference on the array
-    this.setState({symbolArr : client.setSymbolMonitoring(symbol)})
-
-    // Create strategy manager who handles incomming events
-    const strategyManager = new StrategyManager(client, this.state.indicators)
-
-    // Pass strategies to strategy manager
-    this.state.strategies.forEach(s => { strategyManager.addStrategy(s) })
-
-    // Set monitored symbol's array length (don't need longer array than max timeframe)
-    const maxTimeframe = Math.max(... this.state.indicators.map(i => i.timeframe))
-    client.setDbMaxLength(maxTimeframe)
-
-    setInterval(() => { this.mainLoop(strategyManager) }, this.state.timeframe)
+    })
   }
 
   //////////////////////////////////////////////////////////
 
   // Add strategy into global app state
   addStrategy(strategy) {
-    this.state.strategies.push(strategy);
+    this.state.strategies.push(strategy)
   }
 
   //////////////////////////////////////////////////////////
@@ -130,32 +66,10 @@ export default class MTClient extends Component {
   }
 
   //////////////////////////////////////////////////////////
-
-  changeSymbol(symbol) {
-    this.setState({symbol: symbol})
-  } 
-
-  //////////////////////////////////////////////////////////
   
-  changeReqPort(reqPort) {
-    this.setState({reqPort: reqPort})
-  }
-
-  //////////////////////////////////////////////////////////
-  
-  changePullPort(pullPort) {
-    this.setState({pullPort: pullPort})
-  }
-
-  //////////////////////////////////////////////////////////
-  
-  changeTimeframe(timeframe) {
-    this.setState({timeframe: timeframe})
-  }
-
-  //////////////////////////////////////////////////////////
-  
-  // Create connection between Client and MetaTrader
+  ///
+  /// Create connection between Client and MetaTrader
+  ///
   connect() {
     if (this.state.connected) throw Error("Client is already connected!")
 
@@ -170,71 +84,61 @@ export default class MTClient extends Component {
 
   //////////////////////////////////////////////////////////
 
-  ///
-  /// This uninitialized indicators will be saved to file
-  /// with strategy which uses this indicator
-  ///
-  saveIndicator(indicatorName, timeframe, indicator) {
-    this.state.uninitIndicators.push({
-      indicatorName: indicatorName,
-      timeframe: timeframe,
-      indicator: indicator
-    })
+  changeReqPort(reqPort) {
+    this.setState({reqPort: reqPort})
   }
 
+  //////////////////////////////////////////////////////////
+  
+  changePullPort(pullPort) {
+    this.setState({pullPort: pullPort})
+  }
+  
   ///////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////
 
   render() {
     const styles = StyleSheet.create({
-      mainWindow: { padding: 20, width: 300, height: 800, backgroundColor: "#ece6df" },
+      mainWindow: { padding: 20, width: 300, height: 800, backgroundColor: '#ece6df' },
       subtitle: { fontWeight: 'bold' },
-      txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" },
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: '#fff' },
       btn: { width: '200px' }
     })
 
     return (
       <App>
-        <Window title="MT Client" style={ styles.mainWindow }>
-          {/* <TradingViewWidget symbol="NASDAQ:AAPL" /> */}
+        <Window title="MT Client" style={ styles.mainWindow } >
+
           <ConnectionForm 
             pullPort={ this.state.pullPort } 
             reqPort={ this.state.reqPort } 
             changeReqPort={ this.changeReqPort.bind(this) }
             changePullPort={ this.changePullPort.bind(this) }
             connect={ this.connect.bind(this) }
+            active={ this.state.connActive }
           />
-          <SymbolPicker changeSymbol={ this.changeSymbol.bind(this) } />
+
+          <Button style={ styles.btn } title="Toggle" onPress={ () => { this.setState({connActive: !this.state.connActive })} } />
+
+          <UseExistingStrategy />
+
           <IndicatorAddForm 
             addIndicator={ this.addIndicator.bind(this) } 
-            saveIndicator={ this.saveIndicator.bind(this) }
           />
+
           <StrategyAddForm 
             client={ this.state.client }
             symbol={ this.state.symbol }
             indicators={ this.state.indicators }
-            uninitIndicators= { this.state.uninitIndicators }
             addStrategy={ this.addStrategy.bind(this) }
-          />
+          />       
           
-          <Text style={ styles.subtitle }> Timeframe: </Text> 
-          <TextInput
-            style={ styles.txtInput }  
-            value={ this.state.timeframe }
-            onChangeText={ this.changeTimeframe.bind(this) } 
+          <StrategySettings
+            client={ this.state.client } 
           />
-          <Button 
-            style={ styles.btn } 
-            title="Start" 
-            onPress={ this.startLoop.bind(this) } />
-          
-          <View>
-            <Text style={ styles.subtitle }> ask: { this.state.txtBid } </Text>
-            <Text style={ styles.subtitle }> bid: { this.state.txtAsk } </Text>
-          </View>
-          <OpenedTrades trades={ this.state.openedTrades } />
+
         </Window>
       </App>
-    );
+    )
   }
 }

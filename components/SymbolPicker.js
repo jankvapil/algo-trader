@@ -29,6 +29,6 @@ export default class OpenedTrades extends Component {
           <Picker.Item label="GBPJPY" value="GBPJPY" />
         </Picker>
       </View>
-    );
+    )
   }
 }

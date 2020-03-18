@@ -5,7 +5,8 @@ export default class ConnectionForm extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+    }
   }
 
   //////////////////////////////////////////////////////////
@@ -18,23 +19,32 @@ export default class ConnectionForm extends Component {
       txtInput: { borderWidth: 1, width: '200px', backgroundColor: "#fff" },
       btn: { width: '200px' }
     })
-    
+
+    let content;
+
+    if (this.props.active) {
+      content = <View>
+                  <Text style={ styles.title }> MetaTrader Connection </Text>
+                  <Text style={ styles.subtitle }> ReqPort: </Text> 
+                  <TextInput
+                    style={ styles.txtInput }
+                    value={ this.props.reqPort }
+                    onChangeText={ this.props.changeReqPort }
+                  />
+                  <Text style={ styles.subtitle }> PullPort: </Text> 
+                  <TextInput
+                    style={ styles.txtInput }
+                    value={ this.props.pullPort}
+                    onChangeText={ this.props.changePullPort }
+                  />
+                  <Button style={ styles.btn } title="Connect" onPress={ () => { this.props.connect() } } />
+                </View>
+
+    } else content = <View></View>
+
     return (
       <View style={ styles.container }>
-        <Text style={ styles.title }> MetaTrader Connection </Text>
-        <Text style={ styles.subtitle }> ReqPort: </Text> 
-        <TextInput
-          style={ styles.txtInput }
-          value={ this.props.reqPort }
-          onChangeText={ this.props.changeReqPort }
-        />
-        <Text style={ styles.subtitle }> PullPort: </Text> 
-        <TextInput
-          style={ styles.txtInput }
-          value={ this.props.pullPort}
-          onChangeText={ this.props.changePullPort }
-        />
-        <Button style={ styles.btn } title="Connect" onPress={ () => { this.props.connect() } } />
+        { content }
       </View>
     );
   }
