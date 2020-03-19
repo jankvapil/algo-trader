@@ -1,57 +1,24 @@
 import React, { Component } from "react"
 import { Picker, StyleSheet, View, Text, Button } from "proton-native"
 
-import StrategiesPicker from "./StrategiesPicker"
+import IndicatorAddForm from "./IndicatorAddForm"
+import StrategyAddForm from "./StrategyAddForm"
 
-const fs = require("fs")
 
-let picker
-
-export default class UseExistingStrategy extends Component {
+export default class CreateStrategyForm extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      loadedStrategies: [],
-      strategyIdentifiers: []
     }
   }
 
   ///////////////////////////////////////////////////////////
 
   ///
-  /// This uninitialized indicators will be saved to file
-  /// with strategy which uses this indicator
+  /// Tododo
   ///
-  loadStrategiesFromFile() {
-    fs.readFile("./strategies.json", "utf8", (err, data) => {
-      if (err) {
-        console.log("File read failed:", err)
-        return
-      }
-      const json = JSON.parse(data)
-
-      this.setState({
-        strategyIdentifiers: json.map(i => { return i.id }),
-        loadedStrategies: json
-      })
-    })
-  }
-
-  ///////////////////////////////////////////////////////////
-
-  ///
-  /// Initialize choosen strategy
-  ///
-  initStrategy(id) {
-    console.log(id)
-
-    console.log(this.state.loadedStrategies.filter(s => s.id == id))
-
-    // todo: init indicators
-
-    // todo: init strategy
-  }
+ 
 
   ///////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////
@@ -71,24 +38,26 @@ export default class UseExistingStrategy extends Component {
       content = <View>
                   <Button 
                     style={ styles.btn } 
-                    title="Use Existing Strategy" 
+                    title="CreateStrategy" 
                     onPress={ 
                       () => {
-                        this.loadStrategiesFromFile()
-                        this.props.setStage("ChooseStrategy")
+                        this.props.setStage("CreateStrategy")
                       }
                     }
                   />
                 </View>
 
-    } else if (this.props.appStage == "ChooseStrategy") {
+    } else if (this.props.appStage == "CreateStrategy") {
       content = <View>
-                  <StrategiesPicker
-                    strategyIdentifiers={ this.state.strategyIdentifiers }
-                    initStrategy={ this.initStrategy.bind(this) }
-                    setStage={ this.props.setStage }
-                    appStage={ this.props.appStage }
+                  <IndicatorAddForm 
+                    addIndicator={ this.props.addIndicator } 
                   />
+                  <StrategyAddForm 
+                    client={ this.props.client }
+                    symbol={ this.props.symbol }
+                    indicators={ this.props.indicators }
+                    addStrategy={ this.props.addStrategy }
+                  />    
                   <Button 
                     style={ styles.btnBack } 
                     title="Back" 

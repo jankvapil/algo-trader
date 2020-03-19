@@ -2,10 +2,9 @@ import React, { Component } from "react"
 import { Window, App, Text, Button, View, StyleSheet, TextInput, } from "proton-native"
 
 import ConnectionForm from "./components/ConnectionForm"
-import IndicatorAddForm from "./components/IndicatorAddForm"
-import StrategyAddForm from "./components/StrategyAddForm"
 import UseExistingStrategy from "./components/UseExistingStrategy"
 import StrategySettings from './components/StrategySettings'
+import CreateStrategyForm from './components/CreateStrategyForm'
 
 const Client = require("./js/Client")
 
@@ -15,9 +14,6 @@ export default class MTClient extends Component {
   constructor(props) {
     super(props)
 
-    // console.log("Args:")
-    // console.log(process.argv)
-
     // Global App State
     this.state = {
       connected: false,
@@ -26,7 +22,8 @@ export default class MTClient extends Component {
       indicators: [],
       strategies: [],
       client: undefined,
-      connActive: false
+      appStage: "Connection",
+      symbol: "EURUSD"
     }
 
     // Check if strategies.json exists. If not - init json.
@@ -94,6 +91,18 @@ export default class MTClient extends Component {
     this.setState({pullPort: pullPort})
   }
   
+  //////////////////////////////////////////////////////////
+
+  setSymbol(symbol) {
+    this.setState({symbol: symbol})
+  }
+
+  //////////////////////////////////////////////////////////
+
+  setStage(stage) {
+    this.setState({appStage: stage})
+  }
+
   ///////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////
 
@@ -115,26 +124,32 @@ export default class MTClient extends Component {
             changeReqPort={ this.changeReqPort.bind(this) }
             changePullPort={ this.changePullPort.bind(this) }
             connect={ this.connect.bind(this) }
-            active={ this.state.connActive }
+            setStage={ this.setStage.bind(this) }
+            appStage={ this.state.appStage }
           />
 
-          <Button style={ styles.btn } title="Toggle" onPress={ () => { this.setState({connActive: !this.state.connActive })} } />
-
-          <UseExistingStrategy />
-
-          <IndicatorAddForm 
-            addIndicator={ this.addIndicator.bind(this) } 
+          <UseExistingStrategy 
+            setStage={ this.setStage.bind(this) }
+            appStage={ this.state.appStage }
           />
 
-          <StrategyAddForm 
+          <CreateStrategyForm 
+            setStage={ this.setStage.bind(this) }
+            appStage={ this.state.appStage }
             client={ this.state.client }
             symbol={ this.state.symbol }
             indicators={ this.state.indicators }
             addStrategy={ this.addStrategy.bind(this) }
-          />       
+            addIndicator={ this.addIndicator.bind(this) }
+          />
           
           <StrategySettings
             client={ this.state.client } 
+            indicators={ this.state.indicators }
+            strategies={ this.state.strategies }
+            setSymbol={ this.setSymbol.bind(this) }
+            setStage={ this.setStage.bind(this) }
+            appStage={ this.state.appStage }
           />
 
         </Window>

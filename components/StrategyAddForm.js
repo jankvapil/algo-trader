@@ -219,7 +219,7 @@ export default class StrategyAddForm extends Component {
 
         <Button 
           style={ styles.btn }
-          title="Add"
+          title="Create"
           onPress={ this.addStrategy.bind(this) } 
         />
       </View> 

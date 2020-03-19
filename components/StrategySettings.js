@@ -4,11 +4,9 @@ import { Picker, StyleSheet, View, Text, TextInput, Button } from "proton-native
 import SymbolPicker from "./SymbolPicker"
 import OpenedTrades from "./OpenedTrades"
 
-const fs = require("fs")
-
 const Orders = require("../js/Orders")
 const StrategyManager = require("../js/StrategyManager")
-const Indicators = require("../js/Indicators")
+
 
 export default class StrategySettings extends Component {
   constructor(props) {
@@ -67,13 +65,13 @@ export default class StrategySettings extends Component {
     this.setState({symbolArr : client.setSymbolMonitoring(symbol)})
 
     // Create strategy manager who handles incomming events
-    const strategyManager = new StrategyManager(client, this.state.indicators)
+    const strategyManager = new StrategyManager(client, this.props.indicators)
 
     // Pass strategies to strategy manager
-    this.state.strategies.forEach(s => { strategyManager.addStrategy(s) })
+    this.props.strategies.forEach(s => { strategyManager.addStrategy(s) })
 
     // Set monitored symbol's array length (don't need longer array than max timeframe)
-    const maxTimeframe = Math.max(... this.state.indicators.map(i => i.timeframe))
+    const maxTimeframe = Math.max(... this.props.indicators.map(i => i.timeframe))
     client.setDbMaxLength(maxTimeframe)
 
     setInterval(() => { this.mainLoop(strategyManager) }, this.state.timeframe)
@@ -83,6 +81,7 @@ export default class StrategySettings extends Component {
 
   changeSymbol(symbol) {
     this.setState({symbol: symbol})
+    this.props.setSymbol(symbol)
   } 
 
   //////////////////////////////////////////////////////////
@@ -99,27 +98,38 @@ export default class StrategySettings extends Component {
       title: { fontSize: 14, fontWeight: 'bold' },
       container: { backgroundColor: '#ece6df' },
       btn: { width: '200px' },
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: '#fff' },
       picker: {height: 25, width: 100, backgroundColor: '#fff'}
     })
 
+    let content
+
+    if (this.props.appStage == "StrategySettings") {
+      content = <View>
+                  <SymbolPicker changeSymbol={ this.changeSymbol.bind(this) } />
+                    <Text style={ styles.subtitle }> Timeframe: </Text> 
+                    <TextInput
+                      style={ styles.txtInput }  
+                      value={ this.state.timeframe }
+                      onChangeText={ this.changeTimeframe.bind(this) } 
+                    />
+                    <Button 
+                      style={ styles.btn } 
+                      title="Start" 
+                      onPress={ this.startLoop.bind(this) } />
+                    <View>
+                      <Text style={ styles.subtitle }> ask: { this.state.txtBid } </Text>
+                      <Text style={ styles.subtitle }> bid: { this.state.txtAsk } </Text>
+                    </View>
+                    <OpenedTrades trades={ this.state.openedTrades } /> 
+                </View>
+
+    } else content = <View></View>
+
+
     return (
       <View>
-        <SymbolPicker changeSymbol={ this.changeSymbol.bind(this) } />
-        <Text style={ styles.subtitle }> Timeframe: </Text> 
-        <TextInput
-          style={ styles.txtInput }  
-          value={ this.state.timeframe }
-          onChangeText={ this.changeTimeframe.bind(this) } 
-        />
-        <Button 
-          style={ styles.btn } 
-          title="Start" 
-          onPress={ this.startLoop.bind(this) } />
-        <View>
-          <Text style={ styles.subtitle }> ask: { this.state.txtBid } </Text>
-          <Text style={ styles.subtitle }> bid: { this.state.txtAsk } </Text>
-        </View>
-        <OpenedTrades trades={ this.state.openedTrades } /> 
+        { content }
       </View>
     )
   }

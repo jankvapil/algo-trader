@@ -20,9 +20,9 @@ export default class ConnectionForm extends Component {
       btn: { width: '200px' }
     })
 
-    let content;
+    let content
 
-    if (this.props.active) {
+    if (this.props.appStage == "Connection") {
       content = <View>
                   <Text style={ styles.title }> MetaTrader Connection </Text>
                   <Text style={ styles.subtitle }> ReqPort: </Text> 
@@ -37,7 +37,16 @@ export default class ConnectionForm extends Component {
                     value={ this.props.pullPort}
                     onChangeText={ this.props.changePullPort }
                   />
-                  <Button style={ styles.btn } title="Connect" onPress={ () => { this.props.connect() } } />
+                  <Button 
+                    style={ styles.btn } 
+                    title="Connect" 
+                    onPress={ 
+                      () => { 
+                        this.props.connect()
+                        this.props.setStage("ChooseOrCreateStrategy") 
+                      }
+                    } 
+                  />
                 </View>
 
     } else content = <View></View>

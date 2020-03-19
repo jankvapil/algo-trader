@@ -22,7 +22,12 @@ export default class StrategiesPicker extends Component {
         <Button 
           style={ styles.btn } 
           title={ id }
-          onPress={ () => { this.props.initStrategy(id) } }
+          onPress={ 
+            () => {
+              this.props.initStrategy(id) 
+              this.props.setStage("StrategySettings")
+            } 
+          }
         />
       </View>
     ))
@@ -32,6 +37,6 @@ export default class StrategiesPicker extends Component {
         <Text style={ styles.title }> Select Strategy: </Text> 
         { strategies }
       </View>
-     )
+    )
   }
 }
