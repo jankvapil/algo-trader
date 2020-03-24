@@ -1,12 +1,11 @@
 import React, { Component } from "react"
 import { Window, App, Text, Button, View, StyleSheet, TextInput, } from "proton-native"
 
+import Header from "./components/Header"
 import ConnectionForm from "./components/ConnectionForm"
 import UseExistingStrategy from "./components/UseExistingStrategy"
 import StrategySettings from './components/StrategySettings'
 import CreateStrategyForm from './components/CreateStrategyForm'
-
-const Client = require("./js/Client")
 
 const fs = require("fs")
 
@@ -16,11 +15,8 @@ export default class MTClient extends Component {
 
     // Global App State
     this.state = {
-      connected: false,
-      reqPort: "5555",
-      pullPort: "5556",
       indicators: [],
-      strategies: [],
+      strategies: [], 
       client: undefined,
       appStage: "Connection",
       symbol: "EURUSD"
@@ -63,34 +59,11 @@ export default class MTClient extends Component {
   }
 
   //////////////////////////////////////////////////////////
-  
-  ///
-  /// Create connection between Client and MetaTrader
-  ///
-  connect() {
-    if (this.state.connected) throw Error("Client is already connected!")
 
-    // Create connection with MetaTrader - Setting global app state 
-    this.setState({ client: new Client(this.state.reqPort, this.state.pullPort) })
-
-    if (this.state.client) {
-      this.state.client.connect()
-      this.setState({ connected: true })
-    }
+  setClient(client) {
+    this.setState({client: client})
   }
 
-  //////////////////////////////////////////////////////////
-
-  changeReqPort(reqPort) {
-    this.setState({reqPort: reqPort})
-  }
-
-  //////////////////////////////////////////////////////////
-  
-  changePullPort(pullPort) {
-    this.setState({pullPort: pullPort})
-  }
-  
   //////////////////////////////////////////////////////////
 
   setSymbol(symbol) {
@@ -108,22 +81,24 @@ export default class MTClient extends Component {
 
   render() {
     const styles = StyleSheet.create({
-      mainWindow: { padding: 20, width: 300, height: 800, backgroundColor: '#ece6df' },
+      mainWindow: { width: 400, height: 400, backgroundColor: '#303030' },
+    
+      header: { 
+        margin: 20,
+      },
       subtitle: { fontWeight: 'bold' },
-      txtInput: { borderWidth: 1, width: '200px', backgroundColor: '#fff' },
-      btn: { width: '200px' }
+      txtInput: { borderWidth: 1, width: '200px', backgroundColor: '#fefefe', },
+      btn: { width: '200px', }
     })
 
     return (
       <App>
-        <Window title="MT Client" style={ styles.mainWindow } >
+        <Window margined title="MT Client" style={ styles.mainWindow } >
+
+          <Header title={ this.state.appStage }/>
 
           <ConnectionForm 
-            pullPort={ this.state.pullPort } 
-            reqPort={ this.state.reqPort } 
-            changeReqPort={ this.changeReqPort.bind(this) }
-            changePullPort={ this.changePullPort.bind(this) }
-            connect={ this.connect.bind(this) }
+            setClient={ this.setClient.bind(this) }
             setStage={ this.setStage.bind(this) }
             appStage={ this.state.appStage }
           />

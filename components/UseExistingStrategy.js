@@ -59,53 +59,58 @@ export default class UseExistingStrategy extends Component {
   render() {
     const styles = StyleSheet.create({
       title: { fontSize: 14, fontWeight: 'bold' },
-      container: { backgroundColor: '#ece6df' },
-      btn: { width: '200px' },
+      container: { 
+        backgroundColor: "303030", 
+        marginLeft: 100,
+      },
+      btn: {
+        width: '200px',
+        backgroundColor: "#606060", 
+        color: '#141414',
+        height: 32,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 10,
+      },
       btnBack: { width: '100px' },
       picker: {height: 25, width: 100, backgroundColor: '#fff'}
     })
 
-    let content
-
-    if (this.props.appStage == "ChooseOrCreateStrategy") {
-      content = <View>
-                  <Button 
-                    style={ styles.btn } 
-                    title="Use Existing Strategy" 
-                    onPress={ 
-                      () => {
-                        this.loadStrategiesFromFile()
-                        this.props.setStage("ChooseStrategy")
-                      }
-                    }
-                  />
-                </View>
-
+    if (this.props.appStage == "Choose/Create Strategy") {
+      return (
+        <View style={ styles.container }>
+          <Button 
+            style={ styles.btn } 
+            title="Use Existing Strategy" 
+            onPress={ 
+              () => {
+                this.loadStrategiesFromFile()
+                this.props.setStage("ChooseStrategy")
+              }
+            }
+          />
+        </View>
+      )
     } else if (this.props.appStage == "ChooseStrategy") {
-      content = <View>
-                  <StrategiesPicker
-                    strategyIdentifiers={ this.state.strategyIdentifiers }
-                    initStrategy={ this.initStrategy.bind(this) }
-                    setStage={ this.props.setStage }
-                    appStage={ this.props.appStage }
-                  />
-                  <Button 
-                    style={ styles.btnBack } 
-                    title="Back" 
-                    onPress={ 
-                      () => {
-                        this.props.setStage("ChooseOrCreateStrategy")
-                      }
-                    }
-                  />
-                </View>
-
-    } else content = <View></View>
-
-    return (
-      <View style={ styles.container } >  
-        { content }
-      </View>
-    )
+      return (
+        <View style={ styles.container} >
+          <StrategiesPicker
+            strategyIdentifiers={ this.state.strategyIdentifiers }
+            initStrategy={ this.initStrategy.bind(this) }
+            setStage={ this.props.setStage }
+            appStage={ this.props.appStage }
+          />
+          <Button 
+            style={ styles.btnBack } 
+            title="Back" 
+            onPress={ 
+              () => {
+                this.props.setStage("Choose/Create Strategy")
+              }
+            }
+          />
+        </View>
+      )
+    } else return null
   }
 }
