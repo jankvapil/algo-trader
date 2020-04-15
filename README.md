@@ -1,60 +1,44 @@
-# Algorithmic Trader V2 (Bachelor Thesis) 
+## Usage
 
-- Cross-platform desktop trading application based on [Proton][prot]
-- Connects to [MetaTrader 4][mt4] via [ZMQ][zmq] Library
-- User definable Strategies represented as Final State Machines
+### Global Hook Error
 
+If occurs error Unexpected token export: 
+Just change "export default" useStore to "module.exports = useStore;" in node_modules
 
-#### 1. Indicator definition
+### Create an App
 
-- define your indicators by selecting indicator type (Moving Average), setting its period and defining unique name
+```zsh
+# with `nextron`
+$ nextron init my-app --example with-javascript-material-ui
 
-#### 2. Strategy definition
+# with npx
+$ npx create-nextron-app my-app --example with-javascript-material-ui
 
-- use your defined indicators in strategy definition
-- predicate defines when strategy should change state and execute order
+# with yarn
+$ yarn create nextron-app my-app --example with-javascript-material-ui
 
-```javascript
-
-  // SELL predicate  
-  price < indicators.get("ma100")
-
+# with pnpx
+$ pnpx create-nextron-app my-app --example with-javascript-material-ui
 ```
 
-```javascript
+### Install Dependencies
 
-  // BUY predicate
-  price >= indicators.get("ma100")
+```zsh
+$ cd my-app
 
+# using yarn or npm
+$ yarn (or `npm install`)
+
+# using pnpm
+$ pnpm install --shamefully-hoist
 ```
 
-#### 3. Connect to MetaTrader and start automatic trading
+### Use it
 
-- via ZMQ tcp socket
-- select appropriate timeframe (> 500ms)
+```zsh
+# development mode
+$ yarn dev (or `npm run dev` or `pnpm run dev`)
 
-### Installation
-
-#### 1. MetaTrader Setup
-
-- [Darwinex][dwx]
-
-#### 2. MT Client
-
-```console
-git clone https://github.com/jkvapil6/bc
-cd bc
-npm install
-npm start
+# production build
+$ yarn build (or `npm run build` or `pnpm run build`)
 ```
-
-### Documentation
-
-```console
-npm run doc
-```
-
-[prot]: https://github.com/kusti8/proton-native/
-[mt4]: https://www.metatrader4.com/en
-[zmq]: https://zeromq.org/
-[dwx]: https://github.com/darwinex/DarwinexLabs/tree/master/tools/dwx_zeromq_connector

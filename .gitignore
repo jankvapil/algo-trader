@@ -1,5 +1,5 @@
 node_modules
-bin
+*.log
+.next
+app
 dist
-out
-strategies.json
