@@ -23,7 +23,7 @@ const Layout = (props) => {
     <div>
       <Head>
         <title>MetaTrader Client</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cyborg/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/slate/bootstrap.min.css" />
  
       </Head>
       <Navbar bg="dark" variant="dark">
@@ -32,8 +32,8 @@ const Layout = (props) => {
         <Typography gutterBottom>
           <Link className="App-link" href="/home">Home</Link>
           <Link className="App-link" href="/about">About</Link>
-          <Link className="App-link" href="/create-new-strategy">Create</Link>
           <Link className="App-link" href="/connected">Conn</Link>
+          <Link className="App-link" href="/create-new-strategy">Create</Link>
           <Link className="App-link" href="/use-existing-strategy">Use</Link>
         </Typography>
         </Nav>

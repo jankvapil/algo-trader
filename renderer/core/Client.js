@@ -18,10 +18,10 @@ class Client {
     this.pullPort = pullPort;
 
     /** @type {Object} */
-    this.reqSocket = null;
+    this.reqSocket = zmq.socket("req");
 
     /** @type {Object} */
-    this.pullSocket = null;
+    this.pullSocket = zmq.socket("pull");
 
     /** @type {Boolean} */
     this.connected = false;
@@ -42,10 +42,7 @@ class Client {
   /**
    * Method connects to MetaTrader server
    */
-  connect() {
-    this.reqSocket = zmq.socket("req");
-    this.pullSocket = zmq.socket("pull");
-
+  async connect() {
     this.reqSocket.connect("tcp://127.0.0.1:" + this.reqPort);
     this.pullSocket.connect("tcp://127.0.0.1:" + this.pullPort);
 
