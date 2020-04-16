@@ -15,3 +15,4 @@ export const setClient = (store, client) => {
 export const setConnected = (store, connected) => {
   store.setState({ connected })
 }
+
