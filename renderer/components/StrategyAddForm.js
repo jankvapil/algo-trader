@@ -94,6 +94,7 @@ const StrategyAddForm = (props) => {
           id: id,
           stopLoss: stopLoss,
           takeProfit: takeProfit,
+          lotSize: lotSize,
           buyPredicate: buyPredicate,
           sellPredicate: sellPredicate
         }
@@ -114,7 +115,7 @@ const StrategyAddForm = (props) => {
     <div className="form-group has-danger">
       
       <h2 className="display-5">Create Strategy: </h2>
-      <label className="col-form-label">Name (id):</label>
+      <label className="col-form-label">Unique Name (ID):</label>
       <input 
         style={{width: 200}} 
         type="text" 
@@ -125,7 +126,7 @@ const StrategyAddForm = (props) => {
       />
       <div className="invalid-feedback">Sorry, this id is already used.</div>
 
-      <label className="col-form-label">StopLoss (pips):</label>
+      <label className="col-form-label">Stop Loss (pips):</label>
       <input 
         style={{width: 200}} 
         type="text" 
@@ -135,7 +136,7 @@ const StrategyAddForm = (props) => {
         onChange={handleStopLossChange}
       />
       
-      <label className="col-form-label">TakeProfit (pips):</label>
+      <label className="col-form-label">Take Profit (pips):</label>
       <input 
         style={{width: 200}} 
         type="text" 
@@ -145,7 +146,7 @@ const StrategyAddForm = (props) => {
         onChange={handleTakeProfitChange}
       />
 
-      <label className="col-form-label">LotSize:</label>
+      <label className="col-form-label">Lot Size:</label>
       <input 
         style={{width: 200}} 
         type="text" 
@@ -155,7 +156,7 @@ const StrategyAddForm = (props) => {
         onChange={handleLotSizeChange}
       />
       
-      <label className="col-form-label">BuyPredicate:</label>
+      <label className="col-form-label">Buy Predicate:</label>
       <textarea 
         rows="3"
         type="text"
@@ -166,7 +167,7 @@ const StrategyAddForm = (props) => {
         onChange={(e) => setBuyPredicate(e.target.value)}
       />
 
-      <label className="col-form-label">SellPredicate:</label>
+      <label className="col-form-label">Sell Predicate:</label>
       <textarea 
         rows="3"
         type="text"

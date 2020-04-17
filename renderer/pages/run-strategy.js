@@ -15,7 +15,7 @@ const RunStrategy = () => {
 
   const [price, setPrice] = useState(0)
   const [openedTrades, setOpenedTrades] = useState([])
-  const [timeframe, ] = useState(3000)
+  const [timeframe, ] = useState(1000)
 
   ///
   /// Loop: handle btn onclick event
@@ -40,12 +40,14 @@ const RunStrategy = () => {
 
       console.log("Passing strategies")
       console.log(strategies)
+      console.log(indicators)
 
       // Pass strategies to strategy manager
       strategies.forEach(s => { strategyManager.addStrategy(s) })
 
       // Set monitored symbol's array length (don't need longer array than max timeframe)
       const maxTimeframe = Math.max(... indicators.map(i => i.timeframe))
+
       client.setDbMaxLength(maxTimeframe)    
 
       setInterval(() => {

@@ -1,9 +1,9 @@
 // @ts-check
+
 const Client = require("./Client")
 const Indicators = require("./Indicators")
 const Orders = require("./Orders")
 const SymbolValue = require("./SymbolValue")
-// const DB = require("./DB")
 
 
 /**
@@ -89,12 +89,9 @@ class StrategyManager {
    * @param {Array<SymbolValue>} db
    */
   sendEvent(openedTrades, db) {
-    //
-    ////// TODO: close positions ////////
     
     const lastPrice = db[db.length - 1].getPrice()
-    // this.closePositions(openedTrades, lastPrice)
-
+    
     //
     // Update indicators
     for (const i of this.indicators) {
@@ -115,16 +112,19 @@ class StrategyManager {
     this.strategies.forEach(s => {
       const tempMap = new Map()
 
-      console.log(lastPrice)
-      console.log(tempMap)
+      // console.log("indicators")
+      // console.log(s.getIndicators().map(i => i.name))
 
-      for (const i of s.getIndicators()) {
+      for (const i of s.getIndicators().map(i => i.name)) {
         const iVal = this.indicatorValues.get(i)
         // Continue to next strategy..
         if (!iVal) return
         tempMap.set(i, iVal)
       }
 
+      // console.log(lastPrice)
+      // console.log(tempMap)
+      
       ///////////////////////////////////////////////////
       //// TODO: Decide if strategy should trade for real
       ///////////////////////////////////////////////////

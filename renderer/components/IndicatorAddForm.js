@@ -30,6 +30,7 @@ const IndicatorAddForm = (props) => {
     } else setTimeframe(value)
   }
 
+
   ///
   /// Id input: handle onChange event
   ///
@@ -37,6 +38,7 @@ const IndicatorAddForm = (props) => {
     setIdInputClass("form-control")
     setId(e.target.value)
   }
+
 
   ///
   /// Add Indicator button: handle onClick event
@@ -79,7 +81,7 @@ const IndicatorAddForm = (props) => {
     <div className="form-group has-danger">
       
       <h2 className="display-5">Create Indicator: </h2>
-      <label className="col-form-label">Name (id):</label>
+      <label className="col-form-label">Unique Name (ID):</label>
       <input 
         style={{width: 200}} 
         type="text" 
@@ -90,7 +92,7 @@ const IndicatorAddForm = (props) => {
       />
       <div className="invalid-feedback">Sorry, this id is already used.</div>
 
-      <label className="col-form-label">TimeFrame:</label>
+      <label className="col-form-label">Time Frame:</label>
       <input 
         style={{width: 200}} 
         type="text" 
