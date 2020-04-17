@@ -2,8 +2,8 @@ import React from 'react'
 
 import Layout from '../components/Layout'
 
-
 import IndicatorAddForm from '../components/IndicatorAddForm'
+import StrategyAddForm from '../components/StrategyAddForm'
 
 const CreateNewStrategy = () => {
 
@@ -13,6 +13,7 @@ const CreateNewStrategy = () => {
       <p className="lead">This page shows after connecting to MetaTrader.</p>
       <hr className="my-4"/>
       <IndicatorAddForm />
+      <StrategyAddForm />
     </Layout>
   )
 }

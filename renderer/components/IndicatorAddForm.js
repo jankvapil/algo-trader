@@ -9,7 +9,7 @@ const IndicatorAddForm = (props) => {
   const [globalState, globalActions] = useGlobal();
 
   // GUI
-  const [idClass, setIdClass] = useState("form-control")
+  const [idInputClass, setIdInputClass] = useState("form-control")
 
   // Logic
   const [id, setId] = useState('ma10')
@@ -18,7 +18,7 @@ const IndicatorAddForm = (props) => {
 
 
   ///
-  /// Timeframe: handle input:onChange event
+  /// Timeframe input: handle onChange event
   ///
   const handleTimeframeChange = (e) => {
     const value = parseInt(e.target.value)
@@ -28,21 +28,26 @@ const IndicatorAddForm = (props) => {
     } else setTimeframe(value)
   }
 
+  ///
+  /// Id input: handle onChange event
+  ///
   const handleIdChange = (e) => {
-    setIdClass("form-control")
+    setIdInputClass("form-control")
     setId(e.target.value)
   }
 
   ///
-  /// AddBtn: handle btn:onClick event
+  /// Add Indicator button: handle onClick event
   ///
-  const add = () => {
+  const handleBtnClick = () => {
+
+    console.log(`Adding indicator ${id} on ${timeframe} sec timeframe and type: ${type}`)
 
     // check if the indicators are identified uniquely  
     const isTuple = globalState.indicators.find(i => i.id == id)
 
     if (isTuple) {
-      setIdClass("form-control is-invalid")
+      setIdInputClass("form-control is-invalid")
     } else {
       globalState.indicators.push({
         id: id,
@@ -50,8 +55,6 @@ const IndicatorAddForm = (props) => {
         type: type
       })
     }
-
-    console.log(globalState.indicators)
     
     // const fs = require('fs')
     // const str = JSON.stringify(indicator, null, 2)
@@ -59,6 +62,7 @@ const IndicatorAddForm = (props) => {
     //   console.log("saving file..")
     // )
   }
+
 
   return (
     <div className="form-group has-danger">
@@ -68,12 +72,12 @@ const IndicatorAddForm = (props) => {
       <input 
         style={{width: 200}} 
         type="text" 
-        className={idClass}
+        className={idInputClass}
         placeholder="Indicator ID" 
         value={id}
         onChange={handleIdChange} 
       />
-      <div className="invalid-feedback">Sorry, that id is already used.</div>
+      <div className="invalid-feedback">Sorry, this id is already used.</div>
 
       <label className="col-form-label">TimeFrame:</label>
       <input 
@@ -99,10 +103,9 @@ const IndicatorAddForm = (props) => {
         </select>
       </div>
 
-      <button className="btn btn-primary btn-lg" onClick={add}>Add</button>
- 
+      <button className="btn btn-primary btn-lg" onClick={handleBtnClick}>Add</button>
+
     </div>
-    
   )
 }
 

@@ -5,7 +5,9 @@ import * as actions from "../actions"
 const initialState = {
   client: null,
   connected: false,
-  indicators: []
+  symbol: "EURUSD",
+  indicators: [],
+  strategies: []
 }
 
 const useGlobal = useGlobalHook(React, initialState, actions)
