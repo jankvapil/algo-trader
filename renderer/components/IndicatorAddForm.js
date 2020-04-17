@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import useGlobal from "../store"
 
+const Indicators = require('../core/Indicators')
+
 ///
 /// IndicatorAddForm component creates new indicators used by strategies
 ///
@@ -49,10 +51,19 @@ const IndicatorAddForm = (props) => {
     if (isTuple) {
       setIdInputClass("form-control is-invalid")
     } else {
+      let f
+  
+      switch(type) {
+        case "Moving Average" : f = Indicators.average(timeframe)
+          break
+        default: throw Error("Undefined indicator!")
+      }
+
       globalState.indicators.push({
-        id: id,
+        name: id,
         timeframe: timeframe,
-        type: type
+        type: type,
+        f: f
       })
     }
     

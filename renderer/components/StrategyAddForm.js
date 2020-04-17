@@ -99,13 +99,13 @@ const StrategyAddForm = (props) => {
         }
       )
 
+      console.log(s)
+
       // Define transitions
-      defineStrategy(s)
+      defineStrategy(s, sellPredicate, buyPredicate)
 
       // Add strategy to global scope
       globalState.strategies.push(s)
-
-      console.log(globalState.strategies)
     }
   }
 

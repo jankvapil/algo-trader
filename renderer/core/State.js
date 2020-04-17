@@ -10,16 +10,16 @@ class State {
    * @param {Function} transFun - transition function applied when state is changed
    */
   constructor(name, transFun) {
-    this.name = name;
-    this.transFun = transFun;
+    this.name = name
+    this.transFun = transFun
   }
 
   /**
    * Apply transition function
    */
   applyTransition() {
-    this.transFun();
+    this.transFun()
   }
 }
 
-module.exports = State;
+module.exports = State

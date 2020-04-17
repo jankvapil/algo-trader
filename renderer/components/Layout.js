@@ -35,6 +35,7 @@ const Layout = (props) => {
           <Link className="App-link" href="/connected">Conn</Link>
           <Link className="App-link" href="/create-new-strategy">Create</Link>
           <Link className="App-link" href="/use-existing-strategy">Use</Link>
+          <Link className="App-link" href="/run-strategy">Run</Link>
         </Typography>
         </Nav>
       </Navbar>

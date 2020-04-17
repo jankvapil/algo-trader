@@ -54,11 +54,11 @@ exports.sell =
       .concat(symbol)
       .concat(`|0|${stopLoss}|${takeProfit}|`)
       .concat(`${id}`)
-      .concat(`|${lotSize}|123456|0`);
+      .concat(`|${lotSize}|123456|0`)
 
     console.log(req) 
-    client.sendMsg(req);
-  };
+    client.sendMsg(req)
+  }
 
 exports.closeOrder =
   /**
@@ -72,9 +72,9 @@ exports.closeOrder =
   (client, ticket) => {
     let req = "TRADE|CLOSE|0|EURUSD|0|50|50|Node-to-MT4|0.01|123456|".concat(
       ticket
-    );
-    client.sendMsg(req);
-  };
+    )
+    client.sendMsg(req)
+  }
 
 exports.getOpenedTrades =
   /**
@@ -82,6 +82,6 @@ exports.getOpenedTrades =
    * @param {Client} client
    */
   client => {
-    let req = "GET_OPEN_TRADES";
-    client.sendMsg(req);
-  };
+    let req = "GET_OPEN_TRADES"
+    client.sendMsg(req)
+  }
