@@ -59,7 +59,7 @@ const ConnectionForm = (props) => {
         value={pullPort}
         onChange={(e) => {setPullPort(e.target.value)}}
       />
-      
+      <hr className="my-2"/>
       <Link className="App-link" href="/connected">
         <button className="btn btn-primary btn-lg" onClick={connect}>Connect</button>
       </Link>

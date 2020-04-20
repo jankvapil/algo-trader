@@ -137,8 +137,9 @@ const StrategyAddForm = (props) => {
     // Define transitions
     defineStrategy(s, sellPredicate, buyPredicate)
 
-    // Add strategy to global scope
-    globalState.strategies.push(s)
+    // set active strategy to global scope
+    globalActions.setActiveStrategy([s])
+    
     setDisabledCreate(true)
     setDisabledStart(false)
   }
@@ -203,6 +204,10 @@ const StrategyAddForm = (props) => {
             return false
           }
         )
+
+        if (successfullySaved) {
+          globalActions.setStrategies(json)
+        }
       }
     } 
 

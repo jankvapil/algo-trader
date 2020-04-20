@@ -7,7 +7,8 @@ const initialState = {
   connected: false,
   symbol: "EURUSD",
   indicators: [],
-  strategies: []
+  strategies: [],
+  activeStrategy: []
 }
 
 const useGlobal = useGlobalHook(React, initialState, actions)

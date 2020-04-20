@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import Layout from '../components/Layout'
 import StrategyList from '../components/StrategyList'
 
+import useGlobal from "../store"
+
 import { Link } from '../router'
 import { Button } from 'react-bootstrap'
 
@@ -12,6 +14,8 @@ const fs = require('fs').promises
 /// UseExistingStrategy component let user to choose from saved strategies
 ///
 const UseExistingStrategy = () => {
+
+  const [globalState, globalActions] = useGlobal();
 
   ////// GUI
   //
@@ -44,13 +48,14 @@ const UseExistingStrategy = () => {
 
     const res = fs.readFile('./strategies.json', 'utf8')
 
-    const json = await res.then(
+    const strats = await res.then(
       (data) => { return JSON.parse(data) }
     ).catch(
       (err) => console.error("File read failed:", err)
     )
 
-    setStrategies(json)
+    globalActions.setStrategies(strats)
+    // setStrategies(strats)
   }
 
   //////////////////////////////////////////////////////////
@@ -61,7 +66,7 @@ const UseExistingStrategy = () => {
       <h3>Use Existing Strategy</h3>
       <hr className="my-2"/>
 
-      <StrategyList strategies={strategies}/>
+      <StrategyList/>
       <Link className="App-link" href="/connected">
         <button type="button" className="btn btn-primary">Back</button>
       </Link>

@@ -17,6 +17,13 @@ const RunStrategy = () => {
   const [openedTrades, setOpenedTrades] = useState([])
   const [timeframe, ] = useState(1000)
 
+  const [activeStrategy, setActiveStrategy] = useState(globalState.activeStrategy)
+  
+
+  const [activeIndicators, setActiveIndicators] = useState([])
+
+
+
   ///
   /// Loop: handle btn onclick event
   ///
@@ -24,13 +31,22 @@ const RunStrategy = () => {
    
     if (globalState.connected) {
 
+      console.log("ACTIVE INDICATORS")
+      console.log(activeIndicators)
+
       // console.log(globalState.client)
       // console.log("Running loop")
 
       const client = globalState.client
       const symbol = globalState.symbol
-      const strategies = globalState.strategies
+      const strategies = activeStrategy
+
+      ////////
+      // TODO: přepsat - je třeba inicializovat indikátor až ve chvíli, kdy se načte tato stránka
+
       const indicators = globalState.indicators
+      // TODO
+      ///////
 
       // Set monitoring symbol & get reference on the array
       const symbolArr = client.setSymbolMonitoring(symbol)
