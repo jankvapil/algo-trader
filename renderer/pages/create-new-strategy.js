@@ -5,8 +5,6 @@ import Layout from '../components/Layout'
 import IndicatorAddForm from '../components/IndicatorAddForm'
 import StrategyAddForm from '../components/StrategyAddForm'
 
-import { Link } from '../router'
-
 const CreateNewStrategy = () => {
   return (
     <Layout>

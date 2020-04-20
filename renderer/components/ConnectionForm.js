@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import useGlobal from "../store"
 
+import { Link } from '../router'
+
 ///
 /// ConnectionForm component creates connection with MetaTrader 
 ///
@@ -30,6 +32,9 @@ const ConnectionForm = (props) => {
     )
   }
 
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+
   return (
     <div className="form-group">
       
@@ -54,8 +59,10 @@ const ConnectionForm = (props) => {
         value={pullPort}
         onChange={(e) => {setPullPort(e.target.value)}}
       />
-      <button className="btn btn-primary btn-lg" onClick={connect}>Connect</button>
- 
+      
+      <Link className="App-link" href="/connected">
+        <button className="btn btn-primary btn-lg" onClick={connect}>Connect</button>
+      </Link>
     </div>
   )
 }

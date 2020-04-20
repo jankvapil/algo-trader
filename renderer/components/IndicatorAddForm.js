@@ -71,6 +71,8 @@ const IndicatorAddForm = (props) => {
     }
   }
 
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
 
   return (
     <div className="form-group has-danger">
@@ -112,7 +114,6 @@ const IndicatorAddForm = (props) => {
       </div>
 
       <button className="btn btn-primary btn-lg" onClick={handleBtnClick}>Add</button>
-
     </div>
   )
 }

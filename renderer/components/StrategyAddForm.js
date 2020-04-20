@@ -12,11 +12,20 @@ const StrategyAddForm = (props) => {
   
   const [globalState, globalActions] = useGlobal();
 
-  // GUI
+  ////// GUI
+  //
+  // informs user if he creates duplicate strategy
   const [idInputClass, setIdInputClass] = useState("form-control")
+
+  // check-input for saving strategy
   const [checked, setChecked] = useState(false)
 
-  // Logic
+  // initially disabled button which redirects user to trading page 
+  const [disabledStart, setDisabledStart] = useState(true)
+  const [disabledCreate, setDisabledCreate] = useState(false)
+
+  ////// Logic
+  //
   const [id, setId] = useState('my-strategy')
   const [stopLoss, setStopLoss] = useState(10)
   const [takeProfit, setTakeProfit] = useState(10)
@@ -128,6 +137,8 @@ const StrategyAddForm = (props) => {
 
     // Add strategy to global scope
     globalState.strategies.push(s)
+    setDisabledCreate(true)
+    setDisabledStart(false)
   }
 
   //////////////////////////////////////////////////////////
@@ -275,8 +286,14 @@ const StrategyAddForm = (props) => {
       <Link className="App-link" href="/connected">
         <button type="button" className="btn btn-primary">Back</button>
       </Link>
+      <button 
+        className="btn btn-primary btn-lg" 
+        onClick={handleBtnClick}
+        disabled={disabledCreate}
+      >Create</button>
+      
       <Link className="App-link" href="/run-strategy">
-        <button className="btn btn-primary btn-lg" onClick={handleBtnClick}>Create</button>
+        <button className="btn btn-primary btn-lg" disabled={disabledStart}>Start Trading</button>
       </Link>
     </div>
   )

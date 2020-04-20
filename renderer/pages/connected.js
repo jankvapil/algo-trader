@@ -14,7 +14,10 @@ const Connected = () => {
       <Link className="App-link" href="/create-new-strategy">
         <button type="button" className="btn btn-primary">Create New Strategy</button>
       </Link>
-      <button type="button" className="btn btn-secondary">Use Existing Strategy</button>
+      
+      <Link className="App-link" href="/use-existing-strategy">
+        <button type="button" className="btn btn-secondary">Use Existing Strategy</button>
+      </Link>
     </Layout>
   )
 }
