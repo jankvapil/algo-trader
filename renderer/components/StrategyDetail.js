@@ -15,9 +15,22 @@ const StrategyDetail = (props) => {
 
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{ props.strategy.id }</Modal.Title>
+          <Modal.Title>Strategy Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+        <h5>ID: </h5>
+        <data>{ props.strategy.id }</data>
+
+        <h5>Used Indicators:</h5>
+          <ul className="list-group">
+            { props.strategy.indicators.map(i => (
+            <li key={i.name} className="list-group-item d-flex justify-content-between align-items-center">
+              { i.name }
+            </li>
+            ))}
+          </ul>
+          
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={props.handleClose}>
             Back

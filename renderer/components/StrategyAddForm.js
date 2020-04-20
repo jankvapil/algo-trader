@@ -1,3 +1,5 @@
+// @ts-check
+
 import React, { useState } from 'react';
 import useGlobal from "../store"
 
@@ -148,6 +150,7 @@ const StrategyAddForm = (props) => {
   ///
   const saveStrategy = async () => {
       
+    const now = require('../core/helpers/formatHelper').getNowDateFormated
     console.log("Saving strat...")
     
     const usedIndicators = globalState.indicators.map(i => {
@@ -160,6 +163,7 @@ const StrategyAddForm = (props) => {
 
     const savedStrat = {
       id: id,
+      createdAt: now(),
       indicators: usedIndicators,
       strategy: {
         sl: stopLoss,
@@ -181,8 +185,8 @@ const StrategyAddForm = (props) => {
     )
 
     if (json) {
-      // check if the indicators are identified uniquely  
-      const isTuple = json.find(i => i.id == id)
+      // check if the strategies are identified uniquely  
+      const isTuple = json.find(s => s.id == id)
 
       if (isTuple) {
         setIdInputClass("form-control is-invalid")
@@ -194,7 +198,10 @@ const StrategyAddForm = (props) => {
         successfullySaved = await writeRes.then(
           () => { return true }
         ).catch(
-          (err) => console.error("File read failed:", err)
+          (err) => {
+            console.error("File read failed:", err)
+            return false
+          }
         )
       }
     } 
@@ -202,6 +209,12 @@ const StrategyAddForm = (props) => {
     return successfullySaved;
   }
   
+  //////////////////////////////////////////////////////////
+
+  const clearIndicators = () => {
+    globalActions.setIndicators([])
+  }
+
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
@@ -262,7 +275,7 @@ const StrategyAddForm = (props) => {
       />
 
       <label className="col-form-label">Sell Predicate:</label>
-      <textarea 
+      <textarea
         rows="3"
         type="text"
         style={{width: 600}} 
@@ -284,7 +297,7 @@ const StrategyAddForm = (props) => {
       </div>
 
       <Link className="App-link" href="/connected">
-        <button type="button" className="btn btn-primary">Back</button>
+        <button type="button" className="btn btn-primary" onClick={clearIndicators}>Back</button>
       </Link>
       <button 
         className="btn btn-primary btn-lg" 

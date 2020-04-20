@@ -3,7 +3,7 @@
 const Client = require("./Client")
 const Indicators = require("./Indicators")
 const Orders = require("./Orders")
-const SymbolValue = require("./SymbolValue")
+const SymbolValue = require("../model/SymbolValue")
 
 
 /**

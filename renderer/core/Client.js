@@ -1,7 +1,7 @@
 // @ts-check
 
 const zmq = require("zeromq");
-const SymbolValue = require("./SymbolValue")
+const SymbolValue = require("../model/SymbolValue")
 
 /**
  * Class represents a MetaTrader Client.

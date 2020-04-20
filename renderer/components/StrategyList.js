@@ -59,9 +59,9 @@ const StrategyList = (props) => {
         </thead>
         <tbody>
           { props.strategies.map(s => (
-              <tr style={{cursor: "pointer"}} key={s.id} onClick={selectStrategy}>
-                <td> TODO </td>
-                <td>{ s.id }</td>
+              <tr key={s.id} onClick={selectStrategy}>
+                <td>{ s.createdAt }</td>
+                <td style={{cursor: "pointer"}}>{ s.id }</td>
                 <td>{ s.strategy.sl }</td>
                 <td>{ s.strategy.tp }</td>
                 <td>{ s.strategy.lotSize }</td>

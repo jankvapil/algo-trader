@@ -1,17 +1,22 @@
-// export const addToCounterA = (store, amount) => {
-//   const counterA = store.state.counterA + amount
-//   store.setState({ counterA })
-// }
+// @ts-check
 
-// export const addToCounterB = (store, amount) => {
-//   const counterB = store.state.counterB + amount
-//   store.setState({ counterB })
-// }
+/**
+   * @param {typeof import('../core/Indicators')} indicators
+   */
+export const setIndicators = (store, indicators) => {
+  store.setState({ indicators })
+}
 
+/**
+   * @param {typeof import('../core/Client')} client
+   */
 export const setClient = (store, client) => {
   store.setState({ client })
 }
 
+/**
+   * @param {Boolean} connected
+   */
 export const setConnected = (store, connected) => {
   store.setState({ connected })
 }

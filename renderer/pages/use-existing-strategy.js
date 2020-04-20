@@ -58,18 +58,13 @@ const UseExistingStrategy = () => {
 
   return (
     <Layout>
-      
-      <div>
-   
-      
-        <h3>Use Existing Strategy</h3>
-        <hr className="my-2"/>
+      <h3>Use Existing Strategy</h3>
+      <hr className="my-2"/>
 
-        <StrategyList strategies={strategies}/>
-        <Link className="App-link" href="/connected">
-          <button type="button" className="btn btn-primary">Back</button>
-        </Link>
-      </div>
+      <StrategyList strategies={strategies}/>
+      <Link className="App-link" href="/connected">
+        <button type="button" className="btn btn-primary">Back</button>
+      </Link>
     </Layout>
   )
 }

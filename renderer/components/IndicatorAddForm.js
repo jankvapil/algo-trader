@@ -1,8 +1,10 @@
+// @ts-check
+
 import React, { useState } from 'react';
 import useGlobal from "../store"
 
 const Indicators = require('../core/Indicators')
-
+const Indicator = require('../model/Indicator')
 
 ///
 /// IndicatorAddForm component creates new indicators used by strategies
@@ -14,11 +16,12 @@ const IndicatorAddForm = (props) => {
   // GUI
   const [idInputClass, setIdInputClass] = useState("form-control")
 
-  // Logic
+  // DATA
   const [id, setId] = useState('ma10')
   const [timeframe, setTimeframe] = useState(10)
   const [type, setType] = useState("Moving Average")
 
+  //////////////////////////////////////////////////////////
 
   ///
   /// Timeframe input: handle onChange event
@@ -31,6 +34,7 @@ const IndicatorAddForm = (props) => {
     } else setTimeframe(value)
   }
 
+  //////////////////////////////////////////////////////////
 
   ///
   /// Id input: handle onChange event
@@ -40,6 +44,7 @@ const IndicatorAddForm = (props) => {
     setId(e.target.value)
   }
 
+  //////////////////////////////////////////////////////////
 
   ///
   /// Add Indicator button: handle onClick event
@@ -49,7 +54,10 @@ const IndicatorAddForm = (props) => {
     console.log(`Adding indicator ${id} on ${timeframe} sec timeframe and type: ${type}`)
 
     // check if the indicators are identified uniquely  
-    const isTuple = globalState.indicators.find(i => i.id == id)
+    const isTuple = globalState.indicators.find(i => i.name == id)
+
+    console.log(globalState.indicators)
+    console.log(isTuple)
 
     if (isTuple) {
       setIdInputClass("form-control is-invalid")
@@ -62,12 +70,14 @@ const IndicatorAddForm = (props) => {
         default: throw Error("Undefined indicator!")
       }
 
-      globalState.indicators.push({
-        name: id,
-        timeframe: timeframe,
-        type: type,
-        f: f
-      })
+      const alreadyDefinedIndicators = globalState.indicators
+
+      const indicator = new Indicator(id, timeframe, type, f)
+
+      // plus new indicator
+      alreadyDefinedIndicators.push(indicator)
+
+      globalActions.setIndicators(alreadyDefinedIndicators)
     }
   }
 

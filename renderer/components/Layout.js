@@ -26,7 +26,7 @@ const Layout = (props) => {
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/slate/bootstrap.min.css" />
  
       </Head>
-      <Navbar bg="dark" variant="dark">
+      {/* <Navbar bg="dark" variant="dark">
         <Nav className="mr-auto">
           
         <Typography gutterBottom>
@@ -38,7 +38,7 @@ const Layout = (props) => {
           <Link className="App-link" href="/run-strategy">Run</Link>
         </Typography>
         </Nav>
-      </Navbar>
+      </Navbar> */}
       <div className="jumbotron">
         { props.children }
       </div>
