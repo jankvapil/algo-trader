@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import useGlobal from "../store"
 
+import { Link } from '../router'
+
+const fs = require('fs').promises
+
 ///
 /// StrategyAddForm component creates new trading Strategies
 ///
@@ -10,6 +14,7 @@ const StrategyAddForm = (props) => {
 
   // GUI
   const [idInputClass, setIdInputClass] = useState("form-control")
+  const [checked, setChecked] = useState(false)
 
   // Logic
   const [id, setId] = useState('my-strategy')
@@ -19,7 +24,6 @@ const StrategyAddForm = (props) => {
   const [buyPredicate, setBuyPredicate] = useState(`price < indicators.get("ma10")`)
   const [sellPredicate, setSellPredicate] = useState(`price >= indicators.get("ma10")`)
 
-
   ///
   /// Id input: handle onChange event
   ///
@@ -28,6 +32,7 @@ const StrategyAddForm = (props) => {
     setId(e.target.value)
   }
 
+  //////////////////////////////////////////////////////////
 
   ///
   /// StopLoss input: handle onChange event
@@ -40,6 +45,7 @@ const StrategyAddForm = (props) => {
     } else setStopLoss(value)
   }
   
+  //////////////////////////////////////////////////////////
 
   ///
   /// TakeProfit input: handle onChange event
@@ -52,6 +58,7 @@ const StrategyAddForm = (props) => {
     } else setTakeProfit(value)
   }
 
+  //////////////////////////////////////////////////////////
 
   ///
   /// LotSize input: handle onChange event
@@ -64,11 +71,22 @@ const StrategyAddForm = (props) => {
     } else setLotSize(value)
   }
 
+  //////////////////////////////////////////////////////////
 
   ///
   /// Add Strategy button: handle onClick event
   ///
-  const handleBtnClick = () => {
+  const handleBtnClick = async () => {
+
+    // save to file?
+    if (checked) {
+      const isSaved = await saveStrategy()
+      if (!isSaved) {
+        console.error("Not Saved!")
+        return
+      }
+      console.log("Saved!")
+    }
 
     const createStrategy = require('../core/helpers/strategyHelper').createStrategy
     const defineStrategy = require('../core/helpers/strategyHelper').defineStrategy
@@ -77,39 +95,104 @@ const StrategyAddForm = (props) => {
     const client = globalState.client
     const symbol = globalState.symbol
     
-    // check if the Strategys are identified uniquely  
-    const isTuple = globalState.strategies.find(s => s.id == id)
-    
-    if (isTuple) {
-      setIdInputClass("form-control is-invalid")
-    } else {
-      console.log(`Creating ${id}`)
+    // In this app-version is only 1 strategy allowed to trade at once
 
-      // Create new strategy
-      const s = createStrategy(
-        usedIndicators,
-        client, 
-        symbol,
-        {
-          id: id,
-          stopLoss: stopLoss,
-          takeProfit: takeProfit,
-          lotSize: lotSize,
-          buyPredicate: buyPredicate,
-          sellPredicate: sellPredicate
-        }
-      )
+    // // check if the Strategys are identified uniquely  
+    // const isTuple = globalState.strategies.find(s => s.id == id)
 
-      console.log(s)
+    // if (isTuple) {
+    //   setIdInputClass("form-control is-invalid")
+    // } else {
+  
+    console.log(`Creating ${id}`)
 
-      // Define transitions
-      defineStrategy(s, sellPredicate, buyPredicate)
+    // Create new strategy
+    const s = createStrategy(
+      usedIndicators,
+      client, 
+      symbol,
+      {
+        id: id,
+        stopLoss: stopLoss,
+        takeProfit: takeProfit,
+        lotSize: lotSize,
+        buyPredicate: buyPredicate,
+        sellPredicate: sellPredicate
+      }
+    )
 
-      // Add strategy to global scope
-      globalState.strategies.push(s)
-    }
+    console.log(s)
+
+    // Define transitions
+    defineStrategy(s, sellPredicate, buyPredicate)
+
+    // Add strategy to global scope
+    globalState.strategies.push(s)
   }
 
+  //////////////////////////////////////////////////////////
+
+  ///
+  /// Saves strategy to JSON file
+  ///
+  const saveStrategy = async () => {
+      
+    console.log("Saving strat...")
+    
+    const usedIndicators = globalState.indicators.map(i => {
+      return {
+        name: i.name,
+        timeframe: i.timeframe,
+        type: i.type
+      }
+    })
+
+    const savedStrat = {
+      id: id,
+      indicators: usedIndicators,
+      strategy: {
+        sl: stopLoss,
+        tp: takeProfit,
+        lotSize: lotSize,
+        sellPredicate: sellPredicate,
+        buyPredicate: buyPredicate
+      }
+    }
+
+    let successfullySaved = false
+
+    const res = fs.readFile('./strategies.json', 'utf8')
+
+    const json = await res.then(
+      (data) => { return JSON.parse(data) }
+    ).catch(
+      (err) => console.error("File read failed:", err)
+    )
+
+    if (json) {
+      // check if the indicators are identified uniquely  
+      const isTuple = json.find(i => i.id == id)
+
+      if (isTuple) {
+        setIdInputClass("form-control is-invalid")
+      } else {
+        json.push(savedStrat)
+        const str = JSON.stringify(json, null, 2)
+        const writeRes = fs.writeFile("strategies.json", str, "utf8")
+        
+        successfullySaved = await writeRes.then(
+          () => { return true }
+        ).catch(
+          (err) => console.error("File read failed:", err)
+        )
+      }
+    } 
+
+    return successfullySaved;
+  }
+  
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
 
   return (
     <div className="form-group has-danger">
@@ -178,7 +261,23 @@ const StrategyAddForm = (props) => {
         onChange={(e) => setSellPredicate(e.target.value)}
       />
       
-      <button className="btn btn-primary btn-lg" onClick={handleBtnClick}>Create</button>
+      <div className="custom-control custom-checkbox">
+        <input 
+          type="checkbox" 
+          className="custom-control-input" 
+          id="stratSaveCheck" 
+          checked={checked} 
+          onChange={(e) => setChecked(!checked)}
+        />
+        <label className="custom-control-label" htmlFor="stratSaveCheck">Save strategy?</label>
+      </div>
+
+      <Link className="App-link" href="/connected">
+        <button type="button" className="btn btn-primary">Back</button>
+      </Link>
+      <Link className="App-link" href="/run-strategy">
+        <button className="btn btn-primary btn-lg" onClick={handleBtnClick}>Create</button>
+      </Link>
     </div>
   )
 }

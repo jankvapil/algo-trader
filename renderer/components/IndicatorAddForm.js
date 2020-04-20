@@ -3,6 +3,7 @@ import useGlobal from "../store"
 
 const Indicators = require('../core/Indicators')
 
+
 ///
 /// IndicatorAddForm component creates new indicators used by strategies
 ///
@@ -68,12 +69,6 @@ const IndicatorAddForm = (props) => {
         f: f
       })
     }
-    
-    // const fs = require('fs')
-    // const str = JSON.stringify(indicator, null, 2)
-    // fs.writeFile("strategies.json", str, "utf8", () =>
-    //   console.log("saving file..")
-    // )
   }
 
 
