@@ -6,9 +6,10 @@ import { Link } from '../router'
 const Connected = () => {
   return (
     <Layout>
-      <h1 className="display-3">Connected</h1>
+      <h2>Connected!</h2>
       <p className="lead">This page shows after connecting to MetaTrader.</p>
       <hr className="my-4"/>
+
       <p>Select between these two options.</p>
       
       <Link className="App-link" href="/create-new-strategy">

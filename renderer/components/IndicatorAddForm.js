@@ -3,20 +3,17 @@
 import React, { useState } from 'react';
 import useGlobal from "../store"
 
-const Indicators = require('../core/Indicators')
-const Indicator = require('../model/Indicator')
-
 ///
 /// IndicatorAddForm component creates new indicators used by strategies
 ///
-const IndicatorAddForm = (props) => {
+const IndicatorAddForm = () => {
   
   const [globalState, globalActions] = useGlobal();
 
-  // GUI
+  ///// GUI
   const [idInputClass, setIdInputClass] = useState("form-control")
 
-  // DATA
+  ///// DATA
   const [id, setId] = useState('ma10')
   const [timeframe, setTimeframe] = useState(10)
   const [type, setType] = useState("Moving Average")
@@ -50,33 +47,29 @@ const IndicatorAddForm = (props) => {
   /// Add Indicator button: handle onClick event
   ///
   const handleBtnClick = () => {
-
-    console.log(`Adding indicator ${id} on ${timeframe} sec timeframe and type: ${type}`)
-
+    //
     // check if the indicators are identified uniquely  
     const isTuple = globalState.indicators.find(i => i.name == id)
 
-    console.log(globalState.indicators)
-    console.log(isTuple)
-
+    // if not - inform user
     if (isTuple) {
       setIdInputClass("form-control is-invalid")
     } else {
-      let f
-  
-      switch(type) {
-        case "Moving Average" : f = Indicators.average(timeframe)
-          break
-        default: throw Error("Undefined indicator!")
+      
+      // hook the global indicators
+      const alreadyDefinedIndicators = globalState.indicators
+      
+      // create new indicator from input values
+      const newIndicator = {
+        name: id,
+        timeframe: timeframe,
+        type: type
       }
 
-      const alreadyDefinedIndicators = globalState.indicators
+      // extend array with new indicator
+      alreadyDefinedIndicators.push(newIndicator)
 
-      const indicator = new Indicator(id, timeframe, type, f)
-
-      // plus new indicator
-      alreadyDefinedIndicators.push(indicator)
-
+      // set indicators globally
       globalActions.setIndicators(alreadyDefinedIndicators)
     }
   }

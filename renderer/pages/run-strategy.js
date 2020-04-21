@@ -92,10 +92,41 @@ const RunStrategy = () => {
     }
   }
 
+  const init = () => {
+
+    
+
+    const Indicators = require('../core/Indicators')
+    const Indicator = require('../model/Indicator')
+
+    console.log("TODO.. init indicators")
+
+    // let f
+  
+    // switch(type) {
+    //   case "Moving Average" : f = Indicators.average(timeframe)
+    //     break
+    //   default: throw Error("Undefined indicator!")
+    // }
+
+    // const alreadyDefinedIndicators = globalState.indicators
+
+    // const indicator = new Indicator(id, timeframe, type, f)
+
+    // // plus new indicator
+    // alreadyDefinedIndicators.push(indicator)
+
+    // globalActions.setIndicators(alreadyDefinedIndicators)
+  }
+
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+
   return (
     <Layout>
       <h1 className="display-3">Use Existing Strategy</h1>
-      <p className="lead">This page shows after connecting to MetaTrader.</p>
+      <p className="lead">This page shows after selecting active strategy.</p>
+      <button type="button" className="btn btn-primary" onClick={ init }>Init</button>
       <hr className="my-4"/>
       <p>{ price }</p>
       <button type="button" className="btn btn-primary" onClick={ loop }>Start</button>

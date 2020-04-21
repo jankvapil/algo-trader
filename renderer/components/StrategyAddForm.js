@@ -10,7 +10,7 @@ const fs = require('fs').promises
 ///
 /// StrategyAddForm component creates new trading Strategies
 ///
-const StrategyAddForm = (props) => {
+const StrategyAddForm = () => {
   
   const [globalState, globalActions] = useGlobal();
 
@@ -26,8 +26,7 @@ const StrategyAddForm = (props) => {
   const [disabledStart, setDisabledStart] = useState(true)
   const [disabledCreate, setDisabledCreate] = useState(false)
 
-  ////// Logic
-  //
+  ////// DATA
   const [id, setId] = useState('my-strategy')
   const [stopLoss, setStopLoss] = useState(10)
   const [takeProfit, setTakeProfit] = useState(10)
@@ -102,7 +101,9 @@ const StrategyAddForm = (props) => {
     const createStrategy = require('../core/helpers/strategyHelper').createStrategy
     const defineStrategy = require('../core/helpers/strategyHelper').defineStrategy
     
+    // uninitialized indicators
     const usedIndicators = globalState.indicators
+
     const client = globalState.client
     const symbol = globalState.symbol
     
@@ -117,7 +118,7 @@ const StrategyAddForm = (props) => {
   
     console.log(`Creating ${id}`)
 
-    // Create new strategy
+    // Create new strategy with uninitialized indicators
     const s = createStrategy(
       usedIndicators,
       client, 
@@ -154,13 +155,7 @@ const StrategyAddForm = (props) => {
     const now = require('../core/helpers/formatHelper').getNowDateFormated
     console.log("Saving strat...")
     
-    const usedIndicators = globalState.indicators.map(i => {
-      return {
-        name: i.name,
-        timeframe: i.timeframe,
-        type: i.type
-      }
-    })
+    const usedIndicators = globalState.indicators
 
     const savedStrat = {
       id: id,
@@ -216,6 +211,9 @@ const StrategyAddForm = (props) => {
   
   //////////////////////////////////////////////////////////
 
+  ///
+  /// Cleanup function after leaving strategy-add form
+  ///
   const clearIndicators = () => {
     globalActions.setIndicators([])
   }
