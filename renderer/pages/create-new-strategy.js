@@ -14,7 +14,7 @@ const CreateNewStrategy = () => {
 
   return (
     <Layout>
-      <h1 className="display-3">Create New Strategy</h1>
+      <h2>Create New Strategy</h2>
       <p className="lead">This page shows after connecting to MetaTrader.</p>
       <hr className="my-4"/>
       <IndicatorAddForm />

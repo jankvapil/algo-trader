@@ -59,6 +59,15 @@ const UseExistingStrategy = () => {
   }
 
   //////////////////////////////////////////////////////////
+
+  ///
+  /// Cleanup function after leaving strategy-add form
+  ///
+  const clearIndicators = () => {
+    globalActions.setIndicators([])
+  }
+
+  //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
   return (
@@ -68,7 +77,7 @@ const UseExistingStrategy = () => {
 
       <StrategyList/>
       <Link className="App-link" href="/connected">
-        <button type="button" className="btn btn-primary">Back</button>
+        <button type="button" className="btn btn-primary" onClick={clearIndicators}>Back</button>
       </Link>
     </Layout>
   )

@@ -12,6 +12,8 @@ exports.deleteStrategyFromFile = async (id) => {
 
   const res = fs.readFile('./strategies.json', 'utf8')
 
+  let filtered = false
+
   const json = await res.then(
     (data) => { return JSON.parse(data) }
   ).catch(
@@ -23,7 +25,7 @@ exports.deleteStrategyFromFile = async (id) => {
     console.log(json)
 
     // check if the strategies are identified uniquely  
-    const filtered = json.filter(s => s.id != id)
+    filtered = json.filter(s => s.id != id)
 
     console.log(filtered)
 
@@ -37,7 +39,11 @@ exports.deleteStrategyFromFile = async (id) => {
         console.error("File read failed:", err)
         return false
       }
-    )  
+    ) 
+    
+    if (!successfullySaved) {
+      filtered = false
+    }
   } 
   return filtered;
 }

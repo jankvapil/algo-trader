@@ -4,6 +4,8 @@ import StrategyDetail from './StrategyDetail'
 
 import useGlobal from "../store"
 
+const FH = require("../core/helpers/fileHelper")
+
 ///
 /// StrategyList component creates new trading Strategies
 ///
@@ -29,12 +31,16 @@ const StrategyList = () => {
   ///
   const selectStrategy = (e) => {
 
+    // value is possible to select even by inner-html attribute
     const id = e.target.innerHTML
     console.log(`selecting strategy ${id}..`)
 
-    const strat = globalState.strategies.find(s => s.id == id);
-    setSelectedStrategy(strat)
-
+    const loadedStrat = globalState.strategies.find(s => s.id == id)
+    console.log(loadedStrat)
+    setSelectedStrategy(loadedStrat)    
+    
+    // setting active strategy globally
+    globalActions.setIndicators(loadedStrat.indicators)
     handleShow(true)
   }
 
@@ -43,10 +49,11 @@ const StrategyList = () => {
   ///
   /// onClick: delete strategy by id
   ///
-  const deleteStrategy = (id) => {
-    const deleteStrategyFromFile = require("../core/helpers/fileHelper").deleteStrategyFromFile
-    const filtered = deleteStrategyFromFile(id)
-    globalActions.setStrategies(filtered)
+  const deleteStrategy = async (id) => {
+    const filtered = await FH.deleteStrategyFromFile(id)
+
+    if (filtered)
+      globalActions.setStrategies(filtered)
   } 
 
   //////////////////////////////////////////////////////////
@@ -55,7 +62,11 @@ const StrategyList = () => {
   let Detail = <div></div>
 
   if (selectedStrategy) {
-    Detail = <StrategyDetail show={show} strategy={selectedStrategy} handleClose={handleClose}/>
+    Detail = <StrategyDetail 
+                show={show} 
+                loadedStrat={selectedStrategy} 
+                handleClose={handleClose}
+              />
   }
 
   return (

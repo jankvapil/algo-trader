@@ -1,15 +1,3 @@
-// ticket:
-// magic: 123456
-// symbol: "EURUSD"
-// lots: 0.01
-// type: 1
-// openprice: 1.08175
-// opentime: "2020.04.22 21:48:07"
-// SL: 1.08185
-// TP: 1.08165
-// pnl: -0.06
-// comment: "my-strategy"
-
 // @ts-check
 
 /**

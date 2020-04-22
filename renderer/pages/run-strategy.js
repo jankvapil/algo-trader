@@ -37,16 +37,11 @@ const RunStrategy = () => {
    
     if (globalState.connected) {
 
-      setRun(true)
-
-      console.log("ACTIVE INDICATORS")
-      // console.log(activeIndicators)
-
-      // console.log(globalState.client)
-      // console.log("Running loop")
-
+      // Hook the global variables
       const client = globalState.client
       const symbol = globalState.symbol
+
+      // Indicators needs to be initialized
       const indicators = IndicatorsHelper.initIndicators(globalState.indicators)
 
       // Set monitoring symbol & get reference on the array
@@ -54,10 +49,6 @@ const RunStrategy = () => {
       
       // Create strategy manager who handles incomming events
       const strategyManager = new StrategyManager(client, indicators)
-
-      console.log("Passing strategies")
-      console.log(strategies)
-      console.log(indicators)
 
       // Pass strategies to strategy manager
       strategies.forEach(s => { strategyManager.addStrategy(s) })
@@ -115,11 +106,13 @@ const RunStrategy = () => {
       <h1 className="display-3">Use Existing Strategy</h1>
       <p className="lead">This page shows after selecting active strategy.</p>
       <hr className="my-4"/>
-      <p>{ price }</p>
+      <p>Price: { price }</p>
+
+      
+      <OpenedTradesList trades={openedTrades} />
       <button type="button" className="btn btn-primary" onClick={ mainLoop }>Start</button>
       <button type="button" className="btn btn-primary" onClick={ handleStop }>STOP</button>
 
-      <OpenedTradesList trades={openedTrades} />
 
       <Link className="App-link" href="/home">
         <button className="btn btn-primary btn-lg" disabled={false}>Home</button>

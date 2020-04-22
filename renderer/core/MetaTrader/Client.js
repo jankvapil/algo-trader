@@ -98,7 +98,7 @@ class Client {
 
   /**
    * Method parses trades and saves it into buffer
-   * @param {String} trades
+   * @param {Object} trades
    */
   parseTrades(trades) {
     this.trades.splice(0, this.trades.length)
