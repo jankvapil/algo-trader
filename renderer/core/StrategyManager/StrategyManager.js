@@ -1,9 +1,9 @@
 // @ts-check
 
-const Client = require("./Client")
-const Indicators = require("./Indicators")
-const Orders = require("./Orders")
-const SymbolValue = require("../model/SymbolValue")
+const Client = require("../MetaTrader/Client")
+const Indicators = require("../Strategy/Indicators")
+const Orders = require("../Strategy/Orders")
+const SymbolValue = require("../../model/SymbolValue")
 
 
 /**
@@ -13,7 +13,7 @@ class StrategyManager {
   /**
    *
    * @param {Client} client - MT Client
-   * @param {Array<{name: String, timeframe: Number, f: Function}>} indicators
+   * @param {Array<typeof import('../../model/Indicator')>} indicators
    */
   constructor(client, indicators) {
     this.client = client
@@ -92,9 +92,13 @@ class StrategyManager {
     
     const lastPrice = db[db.length - 1].getPrice()
     
+    console.log(this.indicators)
+
     //
     // Update indicators
     for (const i of this.indicators) {
+
+      // console.log(i)
       //
       // If indicator requires more data, skip it
       if (i.timeframe > db.length) continue
@@ -114,8 +118,12 @@ class StrategyManager {
 
       // console.log("indicators")
       // console.log(s.getIndicators().map(i => i.name))
+      // console.log(s)
+
 
       for (const i of s.getIndicators().map(i => i.name)) {
+        // console.log(i)
+
         const iVal = this.indicatorValues.get(i)
         // Continue to next strategy..
         if (!iVal) return

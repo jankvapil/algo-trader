@@ -4,9 +4,9 @@
 ///
 exports.createStrategy = (indicators, client, symbol, strategy) => {
 
-  const Strategy = require('../Strategy')
-  const State = require('../State')
-  const Orders = require('../Orders')
+  const Strategy = require('../Strategy/Strategy')
+  const State = require('../Strategy/State')
+  const Orders = require('../Strategy/Orders')
 
   const strat = new Strategy(
     strategy.id,

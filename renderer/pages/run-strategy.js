@@ -1,10 +1,18 @@
+// @ts-check
+
 import React, { useState } from 'react'
 import useGlobal from "../store"
 
 import Layout from '../components/Layout'
+import OpenedTradesList from '../components/OpenedTradesList'
 
-const Orders = require("../core/Orders")
-const StrategyManager = require('../core/StrategyManager')
+import { Link } from '../router'
+
+const Orders = require("../core/Strategy/Orders")
+const StrategyManager = require('../core/StrategyManager/StrategyManager')
+
+const IndicatorsHelper = require('../core/helpers/indicatorsHelper')
+
 
 ///
 /// RunStrategy page
@@ -16,37 +24,30 @@ const RunStrategy = () => {
   const [price, setPrice] = useState(0)
   const [openedTrades, setOpenedTrades] = useState([])
   const [timeframe, ] = useState(1000)
+  const [strategies, ] = useState(globalState.activeStrategy)
 
-  const [activeStrategy, setActiveStrategy] = useState(globalState.activeStrategy)
-  
-
-  const [activeIndicators, setActiveIndicators] = useState([])
-
-
+  // TODO: STOP loop
+  const [run, setRun] = useState(false)
+  const [loop, setLoop] = useState(null)
 
   ///
   /// Loop: handle btn onclick event
   ///
-  const loop = () => {
+  const mainLoop = () => {
    
     if (globalState.connected) {
 
+      setRun(true)
+
       console.log("ACTIVE INDICATORS")
-      console.log(activeIndicators)
+      // console.log(activeIndicators)
 
       // console.log(globalState.client)
       // console.log("Running loop")
 
       const client = globalState.client
       const symbol = globalState.symbol
-      const strategies = activeStrategy
-
-      ////////
-      // TODO: přepsat - je třeba inicializovat indikátor až ve chvíli, kdy se načte tato stránka
-
-      const indicators = globalState.indicators
-      // TODO
-      ///////
+      const indicators = IndicatorsHelper.initIndicators(globalState.indicators)
 
       // Set monitoring symbol & get reference on the array
       const symbolArr = client.setSymbolMonitoring(symbol)
@@ -66,7 +67,9 @@ const RunStrategy = () => {
 
       client.setDbMaxLength(maxTimeframe)    
 
-      setInterval(() => {
+      const openedTrades = client.getOpenedTrades()
+
+      setLoop(setInterval(() => {
           //
           // Request for opened trades
           Orders.getOpenedTrades(client)
@@ -75,7 +78,11 @@ const RunStrategy = () => {
           Orders.rates(client, symbol)
 
           const lastPrice = symbolArr[symbolArr.length - 1]
-          const openedTrades = client.getOpenedTrades()
+          
+          console.log(openedTrades)
+
+          // React update
+          setOpenedTrades(openedTrades)
 
           if (lastPrice) {
             //
@@ -84,41 +91,22 @@ const RunStrategy = () => {
             //
             // Update app state
             setPrice(lastPrice.getPrice())
-            setOpenedTrades(Object.values(openedTrades))
           }
-      }, timeframe)    
+      }, timeframe))    
     } else {
       console.log("Not connected")
     }
   }
 
-  const init = () => {
+  //////////////////////////////////////////////////////////
 
-    
-
-    const Indicators = require('../core/Indicators')
-    const Indicator = require('../model/Indicator')
-
-    console.log("TODO.. init indicators")
-
-    // let f
-  
-    // switch(type) {
-    //   case "Moving Average" : f = Indicators.average(timeframe)
-    //     break
-    //   default: throw Error("Undefined indicator!")
-    // }
-
-    // const alreadyDefinedIndicators = globalState.indicators
-
-    // const indicator = new Indicator(id, timeframe, type, f)
-
-    // // plus new indicator
-    // alreadyDefinedIndicators.push(indicator)
-
-    // globalActions.setIndicators(alreadyDefinedIndicators)
+  ///
+  /// STOP loop: handle btn onclick event
+  ///
+  const handleStop = () => {
+    clearInterval(loop)
   }
-
+  
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
@@ -126,10 +114,16 @@ const RunStrategy = () => {
     <Layout>
       <h1 className="display-3">Use Existing Strategy</h1>
       <p className="lead">This page shows after selecting active strategy.</p>
-      <button type="button" className="btn btn-primary" onClick={ init }>Init</button>
       <hr className="my-4"/>
       <p>{ price }</p>
-      <button type="button" className="btn btn-primary" onClick={ loop }>Start</button>
+      <button type="button" className="btn btn-primary" onClick={ mainLoop }>Start</button>
+      <button type="button" className="btn btn-primary" onClick={ handleStop }>STOP</button>
+
+      <OpenedTradesList trades={openedTrades} />
+
+      <Link className="App-link" href="/home">
+        <button className="btn btn-primary btn-lg" disabled={false}>Home</button>
+      </Link>
     </Layout>
   )
 }

@@ -2,7 +2,7 @@
 
 
 /**
- * @param {typeof import('../core/Client')} client
+ * @param {typeof import('../core/MetaTrader/Client')} client
  */
 export const setClient = (store, client) => {
   console.log(`Setting client:`)
@@ -33,7 +33,7 @@ export const setStrategies = (store, strategies) => {
 /**
  * Selected indicators
  * 
- * @param {typeof import('../core/Indicators')} indicators
+ * @param {typeof import('../core/Strategy/Indicators')} indicators
  */
 export const setIndicators = (store, indicators) => {
   console.log(`Setting active indicators:`)
@@ -44,11 +44,11 @@ export const setIndicators = (store, indicators) => {
 /**
  * Selected strategy
  * 
- * @param {Object} strategy
+ * @param {Object} activeStrategy
  */
-export const setActiveStrategy = (store, strategy) => {
+export const setActiveStrategy = (store, activeStrategy) => {
   console.log(`Setting active strategy:`)
-  console.log(strategy)
-  store.setState({ strategy })
+  console.log(activeStrategy)
+  store.setState({ activeStrategy })
 }
   

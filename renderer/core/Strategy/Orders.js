@@ -1,6 +1,6 @@
 // @ts-check
 
-const Client = require("./Client");
+const Client = require("../MetaTrader/Client");
 
 exports.rates =
   /**

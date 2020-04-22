@@ -17,7 +17,7 @@ const ConnectionForm = (props) => {
   /// Connection: handle btn onclick event
   ///
   const connect = async () => {
-    const Client = require('../core/Client')
+    const Client = require('../core/MetaTrader/Client')
 
     const client = new Client(reqPort, pullPort)
     const res = client.connect()
