@@ -14,10 +14,15 @@ class StrategyManager {
    *
    * @param {Client} client - MT Client
    * @param {Array<typeof import('../../model/Indicator')>} indicators
+   * @param {Number} tradeDelay - set delay where is no new order send
    */
-  constructor(client, indicators) {
+  constructor(client, indicators, tradeDelay) {
     this.client = client
     this.indicators = indicators
+    this.tradeDelay = tradeDelay
+    
+    /** @type {Boolean} - indicates if waiting for trade execution */
+    this.wait = false
 
     /** @type {Array} */
     this.strategies = []
@@ -143,7 +148,17 @@ class StrategyManager {
 
       // const simulated = this.isSimulated(s.id)
 
-      s.updateState(lastPrice, tempMap)
+      if (!this.wait) {
+        const wasChanged = s.updateState(lastPrice, tempMap)
+
+        if (wasChanged) {
+          
+          this.wait = true
+          console.log(`WAS CHANGED: ${wasChanged} - Applying delay`)
+  
+          setTimeout(() => { this.wait = false }, this.tradeDelay); 
+        }
+      }
     })
   }
 }

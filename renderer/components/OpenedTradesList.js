@@ -21,7 +21,6 @@ const OpenedTradesList = (props) => {
   return (
     <div>
       <h3>Active trades list</h3>
-      <p>The only trades you can use in your strategy design:</p>
       <table className="table table-hover">
         <thead>
           <tr>

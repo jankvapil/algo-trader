@@ -9,7 +9,7 @@ const Layout = (props) => {
   return (
     <div>
       <Head>
-        <title>MetaTrader Client</title>
+        <title>MetaTrader4 Client</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/slate/bootstrap.min.css" />
  
       </Head>

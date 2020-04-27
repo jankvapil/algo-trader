@@ -94,7 +94,11 @@ const StrategyList = () => {
                 <td>{ s.strategy.tp }</td>
                 <td>{ s.strategy.lotSize }</td>
                 <td>
-                  <button onClick={() => deleteStrategy( s.id )} className="ml-2 mb-1 close" aria-label="Close">
+                  <button 
+                    onClick={() => deleteStrategy( s.id )} 
+                    className="ml-2 mb-1 close" 
+                    aria-label="Close"
+                  >
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </td>

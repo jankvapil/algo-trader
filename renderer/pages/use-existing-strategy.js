@@ -6,7 +6,6 @@ import StrategyList from '../components/StrategyList'
 import useGlobal from "../store"
 
 import { Link } from '../router'
-import { Button } from 'react-bootstrap'
 
 const fs = require('fs').promises
 
@@ -16,16 +15,6 @@ const fs = require('fs').promises
 const UseExistingStrategy = () => {
 
   const [globalState, globalActions] = useGlobal();
-
-  ////// GUI
-  //
-  // initially disabled button which redirects user to trading page 
-  const [disabledStart, setDisabledStart] = useState(true)
-
-  ////// Data
-  //
-  // initially disabled button which redirects user to trading page 
-  const [strategies, setStrategies] = useState([])
 
   ///
   /// Loads strategies immediately when component is loaded 

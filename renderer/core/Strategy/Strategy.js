@@ -88,6 +88,8 @@ class Strategy {
    * 
    * @param {Number} price - current price
    * @param {Map} indicatorsValuesMap
+   * 
+   * @returns {Boolean} informs if state was changed
    */
   updateState(price, indicatorsValuesMap) {
     console.log(`price: ${ price }`);
@@ -122,11 +124,13 @@ class Strategy {
             console.log("---- new state:");
             console.log(this.state);
             this.state.applyTransition();
-            return;
+            return true;
           }
         }
       }
     }
+
+    return false
   }
 }
 

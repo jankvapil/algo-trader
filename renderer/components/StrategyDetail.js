@@ -14,7 +14,7 @@ const StrategyDetail = (props) => {
   const [globalState, globalActions] = useGlobal();
 
   ///
-  /// Loads active strategy immediately when component is loaded 
+  /// Loads active strategy immediately after component was loaded 
   ///
   useEffect(() => {
     const init = async() => {
