@@ -5,6 +5,8 @@ import useGlobal from "../store"
 
 import { Link } from '../router'
 
+const SH = require('../core/helpers/strategyHelper')
+const FH = require('../core/helpers/formatHelper')
 const fs = require('fs').promises
 
 ///
@@ -18,6 +20,9 @@ const StrategyAddForm = () => {
   //
   // informs user if he creates duplicate strategy
   const [idInputClass, setIdInputClass] = useState("form-control")
+
+  // informs user that predicate has wrong format
+  const [predInputClass, setPredInputClass] = useState("form-control")
 
   // check-input for saving strategy
   const [checked, setChecked] = useState(false)
@@ -87,19 +92,6 @@ const StrategyAddForm = () => {
   /// Add Strategy button: handle onClick event
   ///
   const handleBtnClick = async () => {
-
-    // save to file?
-    if (checked) {
-      const isSaved = await saveStrategy()
-      if (!isSaved) {
-        console.error("Not Saved!")
-        return
-      }
-      console.log("Saved!")
-    }
-
-    const createStrategy = require('../core/helpers/strategyHelper').createStrategy
-    const defineStrategy = require('../core/helpers/strategyHelper').defineStrategy
     
     // uninitialized indicators
     const usedIndicators = globalState.indicators
@@ -119,7 +111,7 @@ const StrategyAddForm = () => {
     console.log(`Creating ${id}`)
 
     // Create new strategy with uninitialized indicators
-    const s = createStrategy(
+    const s = SH.createStrategy(
       usedIndicators,
       client, 
       symbol,
@@ -135,14 +127,30 @@ const StrategyAddForm = () => {
 
     console.log(s)
 
-    // Define transitions
-    defineStrategy(s, sellPredicate, buyPredicate)
-
-    // set active strategy to global scope
-    globalActions.setActiveStrategy([s])
     
-    setDisabledCreate(true)
-    setDisabledStart(false)
+    // Try define strategy, eval transitions
+    try {
+      SH.defineStrategy(s, sellPredicate, buyPredicate)
+      
+      // save to file?
+      if (checked) {
+        const isSaved = await saveStrategy()
+        if (!isSaved) {
+          console.error("Not Saved!")
+          return
+        }
+        console.log("Saved!")
+      }
+
+      // set active strategy to global scope
+      globalActions.setActiveStrategy([s])
+      
+      setDisabledCreate(true)
+      setDisabledStart(false)
+    } catch (e) {
+      console.error(e)
+      setPredInputClass("form-control is-invalid")
+    }
   }
 
   //////////////////////////////////////////////////////////
@@ -152,14 +160,13 @@ const StrategyAddForm = () => {
   ///
   const saveStrategy = async () => {
       
-    const now = require('../core/helpers/formatHelper').getNowDateFormated
     console.log("Saving strat...")
     
     const usedIndicators = globalState.indicators
 
     const savedStrat = {
       id: id,
-      createdAt: now(),
+      createdAt: FH.getNowDateFormated(),
       indicators: usedIndicators,
       strategy: {
         sl: stopLoss,
@@ -208,7 +215,27 @@ const StrategyAddForm = () => {
 
     return successfullySaved;
   }
-  
+
+  //////////////////////////////////////////////////////////
+
+  ///
+  /// BuyPredicate handle onChange event
+  ///
+  const handleBuyPredicateChange = (e) => { 
+    setPredInputClass("form-control")
+    setBuyPredicate(e.target.value)
+  }
+
+  //////////////////////////////////////////////////////////
+
+  ///
+  /// SellPredicate handle onChange event
+  ///
+  const handleSellPredicateChange = (e) => { 
+    setPredInputClass("form-control")
+    setSellPredicate(e.target.value)
+  }
+
   //////////////////////////////////////////////////////////
 
   ///
@@ -271,22 +298,24 @@ const StrategyAddForm = () => {
         rows="3"
         type="text"
         style={{width: 600}} 
-        className="form-control"
+        className={predInputClass}
         placeholder="BuyPredicate" 
         value={buyPredicate}
-        onChange={(e) => setBuyPredicate(e.target.value)}
+        onChange={handleBuyPredicateChange}
       />
+      <div className="invalid-feedback">Please set valid predicate. </div>
 
       <label className="col-form-label">Sell Predicate:</label>
       <textarea
         rows="3"
         type="text"
         style={{width: 600}} 
-        className="form-control"
+        className={predInputClass}
         placeholder="SellPredicate" 
         value={sellPredicate}
-        onChange={(e) => setSellPredicate(e.target.value)}
+        onChange={handleSellPredicateChange}
       />
+      <div className="invalid-feedback">Please set valid predicate. </div>
       
       <div className="custom-control custom-checkbox">
         <input 
@@ -296,8 +325,12 @@ const StrategyAddForm = () => {
           checked={checked} 
           onChange={(e) => setChecked(!checked)}
         />
+        
+        <hr className="my-1" />
         <label className="custom-control-label" htmlFor="stratSaveCheck">Save strategy?</label>
       </div>
+
+      <hr className="my-2" />
 
       <Link className="App-link" href="/connected">
         <button type="button" className="btn btn-primary" onClick={clearIndicators}>Back</button>

@@ -5,6 +5,7 @@ import useGlobal from "../store"
 
 import Layout from '../components/Layout'
 import OpenedTradesList from '../components/OpenedTradesList'
+import ErrorModal from '../components/ErrorModal'
 
 import { Link } from '../router'
 
@@ -17,6 +18,7 @@ const Mainloop = require('../core/StrategyManager/Mainloop')
 const RunStrategy = () => {
   
   ///// DATA 
+  
   const [globalState, globalActions] = useGlobal()
 
   const [price, setPrice] = useState(0)
@@ -28,8 +30,12 @@ const RunStrategy = () => {
   const [loop, setLoop] = useState(null)
 
   ///// GUI
+
   const [timeframeInputClass, setTimeframeInputClass] = useState("form-control")
   const [delayInputClass, setDelayInputClass] = useState("form-control")
+  const [showError, setShowError] = useState(false)
+
+  //////////////////////////////////////////////////////////
 
   ///
   /// Loop: handle btn onclick event
@@ -38,7 +44,7 @@ const RunStrategy = () => {
    
     if (globalState.connected) {
 
-      // Create main loop
+      // create main loop
       const loop = Mainloop.run(
         globalState.client,
         symbol,
@@ -50,6 +56,7 @@ const RunStrategy = () => {
         setPrice
       )
 
+      // save loop in component state
       setLoop(loop)
 
     } else {
@@ -75,8 +82,15 @@ const RunStrategy = () => {
   const handleStart = () => {
     if (timeframe >= 1000) {
       if (tradeDelay >= 1000) {
-        setRun(true)
-        mainLoop()
+        
+        try {
+          mainLoop()
+          setRun(true)
+        } catch (e) {
+          setShowError(true)
+          console.error(e)
+        }
+        
       } else {
         setDelayInputClass("form-control is-invalid")
       }
@@ -170,12 +184,20 @@ const RunStrategy = () => {
 
       <OpenedTradesList trades={openedTrades} />
 
+
       <button
         type="button" 
         disabled={run}
         className="btn btn-primary" 
         onClick={ handleStart }
       > START </button>
+
+      <ErrorModal 
+        show={showError} 
+        title="Error!"
+        text="Connection lost. Please try to connect to MetaTrader again."
+        handleClose={() => setShowError(false)}
+      />
 
       <button 
         type="button" 

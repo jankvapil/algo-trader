@@ -30,14 +30,14 @@ class Client {
     /** @type {Number} - max length of db (seconds) */
     this.DB_MAX_LENGTH = 5000
 
-    /** @type {Map} - database of symbol databases */
-    this.ratesDb = null
+    /** @type {Map} - map of arrays of symbol's values history */
+    this.ratesDb = new Map()
 
     /** @type {Array} - currently opened trades buffer */
     this.trades = []
 
     /** @type {Array} - history of MT Server responses */
-    this.responses = null
+    this.responses = []
   }
 
   /**
@@ -48,8 +48,6 @@ class Client {
     this.pullSocket.connect("tcp://127.0.0.1:" + this.pullPort)
 
     this.connected = true
-    this.ratesDb = new Map()
-    this.responses = []
 
     this.reqSocket.on("message", function(msg) {
       // console.log("REQ: %s", msg.toString())
