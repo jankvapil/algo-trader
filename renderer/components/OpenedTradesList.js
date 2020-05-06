@@ -20,7 +20,7 @@ const OpenedTradesList = (props) => {
 
   return (
     <div>
-      <h3>Active trades list</h3>
+      <h3>Active Trades:</h3>
       <hr className="my-4"/>
       <table className="table table-hover">
         <thead>

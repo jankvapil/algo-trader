@@ -18,14 +18,14 @@ const ActiveIndicatorsList = (props) => {
 
   return (
     <div>
-      <h3>Active indicators list</h3>
-      <p className="lead">The only indicators you can use in your strategy design:</p>
+      <h3> Active Indicators: </h3>
+      <p> The only indicators you can use in your strategy design: </p>
       <table className="table table-hover" style={{width: 500, margin: 'auto'}}>
         <thead>
           <tr>
-            <th scope="col">Name (id)</th>
-            <th scope="col">Timeframe</th>
-            <th scope="col">Type</th>
+            <th scope="col"> Name (id) </th>
+            <th scope="col"> Timeframe </th>
+            <th scope="col"> Type </th>
           </tr>
         </thead>
           { tbody }

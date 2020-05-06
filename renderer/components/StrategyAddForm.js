@@ -253,7 +253,14 @@ const StrategyAddForm = () => {
       width: 300, 
       margin: 'auto',
     },
-    btn: {
+    bckBtn: {
+      float: 'left',
+      width: 100,
+      height: 50,
+      fontSize: 16,
+    },
+    okBtn: {
+      float: 'right',
       width: 100,
       height: 50,
       fontSize: 16,
@@ -341,34 +348,36 @@ const StrategyAddForm = () => {
         />
         
         <hr className="my-1" />
-        <label className="custom-control-label" htmlFor="stratSaveCheck">Save strategy?</label>
+        <label className="custom-control-label" htmlFor="stratSaveCheck" style={{float: 'right'}}>Save strategy?</label>
       </div>
 
       <hr className="my-2" />
 
       <Link className="App-link" href="/connected">
         <button
-          style={styles.btn}
+          style={styles.bckBtn}
           type="button"
           className="btn btn-primary" 
           onClick={clearIndicators}
         >Back</button>
       </Link>
 
-      <button 
-        style={styles.btn}
-        className="btn btn-primary btn-lg" 
-        onClick={handleBtnClick}
-        disabled={disabledCreate}
-      >Create</button>
       
       <Link className="App-link" href="/run-strategy">
         <button 
-          style={styles.btn}
+          style={styles.okBtn}
           className="btn btn-primary btn-lg" 
           disabled={disabledStart}
         >Use</button>
       </Link>
+
+      
+      <button 
+        style={styles.okBtn}
+        className="btn btn-primary btn-lg" 
+        onClick={handleBtnClick}
+        disabled={disabledCreate}
+      >Create</button>
     </div>
   )
 }

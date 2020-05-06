@@ -227,7 +227,7 @@ const RunStrategy = () => {
 
       
       <hr className="my-4"/>
-      <p>Price: { price }</p>
+      <h3>{ symbol }: { price }</h3>
 
       <hr className="my-4"/>
       <OpenedTradesList trades={openedTrades} />

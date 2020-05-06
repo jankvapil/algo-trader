@@ -66,10 +66,10 @@ const UseExistingStrategy = () => {
       <hr className="my-4"/>
 
       <StrategyList/>
-      <hr className="my-4"/>
+      <hr className="my-5"/>
       <Link className="App-link" href="/connected">
         <button 
-          style={{width: 100, height: 50}}
+          style={{width: 100, height: 50, float: 'left'}}
           type="button" 
           className="btn btn-primary" 
           onClick={clearIndicators}

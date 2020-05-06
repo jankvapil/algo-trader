@@ -29,6 +29,7 @@ const CreateNewStrategy = () => {
 
       <ActiveIndicatorsList indicators={globalState.indicators} />
       <hr className="my-3"/>
+      
       <button 
         className="btn btn-primary btn-lg" 
         style={{width: 200, height: 50, fontSize: 16}}

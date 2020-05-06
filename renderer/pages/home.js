@@ -1,14 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Layout from '../components/Layout'
 import ConnectionForm from '../components/ConnectionForm'
 
-import { Link } from '../router'
+const fs = require('fs').promises
 
 ///
 /// Homepage 
 ///
 const Home = () => {
+
+  ///
+  /// Check if the json file with strategies is initialized
+  ///
+  useEffect(() => {
+    const init = async() => {
+      fs.access("./strategies.json", fs.F_OK, (err) => {
+        if (err) {
+          fs.writeFile("strategies.json", "[]", "utf8", () =>
+            console.log("Initializing strategies.json file..")
+          )
+        }
+      })
+    }
+
+    init();    
+  }, [])
+
+  //////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////
+
   return (
     <Layout>
       <h1 className="display-3">Welcome!</h1>
