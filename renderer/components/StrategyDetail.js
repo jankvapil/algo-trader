@@ -79,7 +79,7 @@ const StrategyDetail = (props) => {
         <Modal.Header closeButton>
           <Modal.Title>{ props.loadedStrat.id }</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{width: 400, margin: 'auto'}}>
           <h5>Used Indicators:</h5>
           <ul className="list-group">
             { props.loadedStrat.indicators.map(i => (
@@ -96,7 +96,7 @@ const StrategyDetail = (props) => {
           <p> {props.loadedStrat.strategy.buyPredicate }</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={props.handleClose}>
+          <Button variant="primary" onClick={props.handleClose}>
             Back
           </Button>
           <Link className="App-link" href="/run-strategy">

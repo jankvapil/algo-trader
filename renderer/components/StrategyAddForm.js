@@ -248,13 +248,27 @@ const StrategyAddForm = () => {
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
+  const styles = {
+    input: {
+      width: 300, 
+      margin: 'auto',
+    },
+    btn: {
+      width: 100,
+      height: 50,
+      fontSize: 16,
+    }
+  }
+
+  //////////////////////////////////////////////////////////
+
   return (
     <div className="form-group has-danger">
       
-      <h2 className="display-5">Create Strategy: </h2>
+      <h2>Strategy Definition: </h2>
       <label className="col-form-label">Unique Name (ID):</label>
       <input 
-        style={{width: 200}} 
+        style={styles.input} 
         type="text" 
         className={idInputClass}
         placeholder="Strategy ID" 
@@ -265,7 +279,7 @@ const StrategyAddForm = () => {
 
       <label className="col-form-label">Stop Loss (pips):</label>
       <input 
-        style={{width: 200}} 
+        style={styles.input} 
         type="text" 
         className="form-control"
         placeholder="StopLoss" 
@@ -275,7 +289,7 @@ const StrategyAddForm = () => {
       
       <label className="col-form-label">Take Profit (pips):</label>
       <input 
-        style={{width: 200}} 
+        style={styles.input} 
         type="text" 
         className="form-control"
         placeholder="TakeProfit" 
@@ -285,7 +299,7 @@ const StrategyAddForm = () => {
 
       <label className="col-form-label">Lot Size:</label>
       <input 
-        style={{width: 200}} 
+        style={styles.input} 
         type="text" 
         className="form-control"
         placeholder="LotSize" 
@@ -295,9 +309,9 @@ const StrategyAddForm = () => {
       
       <label className="col-form-label">Buy Predicate:</label>
       <textarea 
-        rows="3"
+        rows="5"
         type="text"
-        style={{width: 600}} 
+        style={{width: 600, margin: 'auto'}} 
         className={predInputClass}
         placeholder="BuyPredicate" 
         value={buyPredicate}
@@ -307,9 +321,9 @@ const StrategyAddForm = () => {
 
       <label className="col-form-label">Sell Predicate:</label>
       <textarea
-        rows="3"
+        rows="5"
         type="text"
-        style={{width: 600}} 
+        style={{width: 600, margin: 'auto'}} 
         className={predInputClass}
         placeholder="SellPredicate" 
         value={sellPredicate}
@@ -333,16 +347,27 @@ const StrategyAddForm = () => {
       <hr className="my-2" />
 
       <Link className="App-link" href="/connected">
-        <button type="button" className="btn btn-primary" onClick={clearIndicators}>Back</button>
+        <button
+          style={styles.btn}
+          type="button"
+          className="btn btn-primary" 
+          onClick={clearIndicators}
+        >Back</button>
       </Link>
+
       <button 
+        style={styles.btn}
         className="btn btn-primary btn-lg" 
         onClick={handleBtnClick}
         disabled={disabledCreate}
       >Create</button>
       
       <Link className="App-link" href="/run-strategy">
-        <button className="btn btn-primary btn-lg" disabled={disabledStart}>Start Trading</button>
+        <button 
+          style={styles.btn}
+          className="btn btn-primary btn-lg" 
+          disabled={disabledStart}
+        >Use</button>
       </Link>
     </div>
   )

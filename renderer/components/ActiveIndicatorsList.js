@@ -19,8 +19,8 @@ const ActiveIndicatorsList = (props) => {
   return (
     <div>
       <h3>Active indicators list</h3>
-      <p>The only indicators you can use in your strategy design:</p>
-      <table className="table table-hover">
+      <p className="lead">The only indicators you can use in your strategy design:</p>
+      <table className="table table-hover" style={{width: 500, margin: 'auto'}}>
         <thead>
           <tr>
             <th scope="col">Name (id)</th>

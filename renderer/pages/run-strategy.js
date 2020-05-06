@@ -134,19 +134,31 @@ const RunStrategy = () => {
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
+  const styles = {
+    input: {
+      width: 200, 
+      margin: 'auto',
+    },
+    btn: {
+      fontSize: 16,
+      height: 50,
+      width: 150,
+    },
+  }
+
+  //////////////////////////////////////////////////////////
+
   return (
     <Layout>
       <h1 className="display-3">Start Trading</h1>
-      <p className="lead">This page shows after selecting active strategy.</p>
-      <hr className="my-4"/>
-      <p>Price: { price }</p>
+      <p className="lead">This page shows after selecting strategy.</p>
 
-      <h3>Select Symbol</h3>
 
+      <label className="col-form-label">Select Symbol</label>
       <div className="form-group">
         <select 
           className="custom-select" 
-          style={{width: 200}}
+          style={styles.input}
           onChange={(e) => setSymbol(e.target.value)} 
           defaultValue={symbol}
         >
@@ -157,12 +169,11 @@ const RunStrategy = () => {
       </div>
 
       <div className="form-group has-danger">
-        <label className="col-form-label" htmlFor="inputDefault">Timeframe: (ms)</label>
+        <label className="col-form-label">Timeframe: (ms)</label>
         <input 
           type="text"
-          style={{width: 200}} 
+          style={styles.input} 
           className={timeframeInputClass}
-          placeholder="Default input" 
           id="inputDefault" 
           value={timeframe}
           onChange={ handleTimeframeChange } />
@@ -170,23 +181,20 @@ const RunStrategy = () => {
       </div>
       
       <div className="form-group has-danger">
-        <label className="col-form-label" htmlFor="inputDefault">Order Delay: (ms)</label>
+        <label className="col-form-label">Order Delay: (ms)</label>
         <input 
           type="text"
-          style={{width: 200}} 
+          style={styles.input} 
           className={delayInputClass}
-          placeholder="Default input" 
           id="inputDefault" 
           value={tradeDelay}
           onChange={ handleDelayChange } />
         <div className="invalid-feedback">Please set order delay >= 1000ms.</div>
       </div>
 
-      <OpenedTradesList trades={openedTrades} />
-
-
       <button
         type="button" 
+        style={styles.btn}
         disabled={run}
         className="btn btn-primary" 
         onClick={ handleStart }
@@ -201,14 +209,28 @@ const RunStrategy = () => {
 
       <button 
         type="button" 
+        style={styles.btn}
         className="btn btn-primary" 
         onClick={ handleStop }
         disabled={!run}
       > STOP </button>
 
+      
+      <hr className="my-4"/>
       <Link className="App-link" href="/home">
-        <button className="btn btn-primary btn-lg" disabled={run}>Home</button>
+        <button 
+          style={styles.btn}
+          className="btn btn-primary btn-lg" 
+          disabled={run}
+        > Home</button>
       </Link>
+
+      
+      <hr className="my-4"/>
+      <p>Price: { price }</p>
+
+      <hr className="my-4"/>
+      <OpenedTradesList trades={openedTrades} />
     </Layout>
   )
 }

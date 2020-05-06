@@ -61,12 +61,19 @@ const UseExistingStrategy = () => {
 
   return (
     <Layout>
-      <h3>Use Existing Strategy</h3>
-      <hr className="my-2"/>
+      <h2 className="display-3"> Use Existing Strategy </h2>
+      <p className="lead"> You can select or delete previously defined strategy. </p>
+      <hr className="my-4"/>
 
       <StrategyList/>
+      <hr className="my-4"/>
       <Link className="App-link" href="/connected">
-        <button type="button" className="btn btn-primary" onClick={clearIndicators}>Back</button>
+        <button 
+          style={{width: 100, height: 50}}
+          type="button" 
+          className="btn btn-primary" 
+          onClick={clearIndicators}
+        > Back </button>
       </Link>
     </Layout>
   )

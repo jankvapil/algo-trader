@@ -35,13 +35,23 @@ const ConnectionForm = (props) => {
   //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
+  const styles = {
+    input: {
+      width: 200, 
+      margin: 'auto'
+    }
+  }
+
+  //////////////////////////////////////////////////////////
+  
   return (
     <div className="form-group">
-      
+
       <h2 className="display-5">Connection: </h2>
+
       <label className="col-form-label" htmlFor="inputDefault">ReqPort:</label>
       <input 
-        style={{width: 200}} 
+        style={styles.input} 
         type="text" 
         className="form-control" 
         placeholder="ReqPort" 
@@ -49,9 +59,10 @@ const ConnectionForm = (props) => {
         value={reqPort}
         onChange={(e) => {setReqPort(e.target.value)}} 
       />
+
       <label className="col-form-label" htmlFor="inputDefault">PullPort:</label>
       <input 
-        style={{width: 200}} 
+        style={styles.input} 
         type="text" 
         className="form-control"
         placeholder="PullPort" 
@@ -61,8 +72,13 @@ const ConnectionForm = (props) => {
       />
       <hr className="my-2"/>
       <Link className="App-link" href="/connected">
-        <button className="btn btn-primary btn-lg" onClick={connect}>Connect</button>
+        <button 
+          className="btn btn-primary btn-lg" 
+          onClick={connect}
+          style={{width: 200}}
+        >Connect</button>
       </Link>
+
     </div>
   )
 }

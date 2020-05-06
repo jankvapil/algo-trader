@@ -6,7 +6,7 @@ import { Link } from '../router'
 const Connected = () => {
   return (
     <Layout>
-      <h2>Connected!</h2>
+      <h2 className="display-3">Connected!</h2>
       <p className="lead">This page shows after connecting to MetaTrader.</p>
       <hr className="my-4"/>
 
@@ -17,7 +17,7 @@ const Connected = () => {
       </Link>
       
       <Link className="App-link" href="/use-existing-strategy">
-        <button type="button" className="btn btn-secondary">Use Existing Strategy</button>
+        <button type="button" className="btn btn-primary">Use Existing Strategy</button>
       </Link>
     </Layout>
   )

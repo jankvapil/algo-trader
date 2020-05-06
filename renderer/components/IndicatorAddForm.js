@@ -79,8 +79,6 @@ const IndicatorAddForm = () => {
 
   return (
     <div className="form-group has-danger">
-      
-      <h2 className="display-5">Create Indicator: </h2>
       <label className="col-form-label">Unique Name (ID):</label>
       <input 
         style={{width: 200}} 
@@ -111,12 +109,15 @@ const IndicatorAddForm = () => {
           defaultValue={type}
         >
           <option value="Moving Average">Moving Average</option>
-          <option value="MACD">MACD</option>
-          <option value="ZikZak">ZikZak</option>
         </select>
       </div>
 
-      <button className="btn btn-primary btn-lg" onClick={handleBtnClick}>Add</button>
+      <button 
+        style={{width: 200, fontSize: 16}}
+        className="btn btn-primary btn-lg" 
+        onClick={handleBtnClick}
+      >Add</button>
+    
     </div>
   )
 }

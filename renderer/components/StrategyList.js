@@ -73,7 +73,7 @@ const StrategyList = () => {
     <div>
       { Detail }
 
-      <table className="table table-hover">
+      <table className="table table-hover" style={{width: 800, margin: 'auto'}}>
         <thead>
           <tr>
             <th scope="col">Created</th>
