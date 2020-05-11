@@ -18,7 +18,7 @@ const IndicatorsHelper = require('../../core/helpers/indicatorsHelper')
    * @param {Function} updateTrades
    * @param {Function} updatePrice
    */
-exports.run = (client, symbol, timeframe, tradeDelay, gindicators, strategies, updateTrades, updatePrice) => {
+exports.run = (client, symbol, timeframe, tradeDelay, gindicators, strategies, updateTrades, updatePrice, updateState) => {
 
   // Indicators needs to be initialized
   const indicators = IndicatorsHelper.initIndicators(gindicators)
@@ -39,6 +39,12 @@ exports.run = (client, symbol, timeframe, tradeDelay, gindicators, strategies, u
 
   const openedTrades = client.getOpenedTrades()
 
+  // handles trade delay
+  let wait = false
+
+  /////
+  ///// Main Loop
+  /////
   const loop = setInterval(() => {
     //
     // Request for opened trades
@@ -51,16 +57,28 @@ exports.run = (client, symbol, timeframe, tradeDelay, gindicators, strategies, u
     
     console.log(openedTrades)
 
-    // React update
+    // React GUI update
     updateTrades(openedTrades)
 
-    if (lastPrice) {
-      //
-      // Sends event to all strategies
-      strategyManager.sendEvent(openedTrades, symbolArr)
+    if (!wait && lastPrice) {
       //
       // Update app state
       updatePrice(lastPrice.getPrice())
+      //
+      // Sends event to all strategies
+      const state = strategyManager.sendEvent(openedTrades, symbolArr)
+
+      //
+      // Update state && fire delay
+      if (state) {
+        wait = true
+
+        // React GUI update
+        updateState(state.name)
+
+        // After timeout enable trading
+        setTimeout(() => { wait = false }, tradeDelay)
+      }
     }
   }, timeframe)    
 

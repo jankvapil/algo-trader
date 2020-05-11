@@ -27,8 +27,8 @@ const Layout = (props) => {
       <Head>
         <title>MetaTrader4 Client</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/slate/bootstrap.min.css" />
- 
       </Head>
+      
       <div className="jumbotron text-center items-center" style={styles.body}>
         { props.children }
       </div>

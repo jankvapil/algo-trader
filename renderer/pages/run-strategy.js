@@ -25,6 +25,7 @@ const RunStrategy = () => {
   const [openedTrades, setOpenedTrades] = useState([])
   const [timeframe, setTimeframe] = useState(1000)
   const [symbol, setSymbol] = useState("EURUSD")
+  const [state, setState] = useState("INIT")
   const [tradeDelay, setTradeDelay] = useState(5000)
   const [run, setRun] = useState(false)
   const [loop, setLoop] = useState(null)
@@ -53,7 +54,8 @@ const RunStrategy = () => {
         globalState.indicators,
         globalState.activeStrategy,
         setOpenedTrades,
-        setPrice
+        setPrice,
+        setState
       )
 
       // save loop in component state
@@ -148,11 +150,35 @@ const RunStrategy = () => {
 
   //////////////////////////////////////////////////////////
 
-  return (
-    <Layout>
+  let content = <div></div>
+
+  if (run) {
+
+    content = <div>
+      <h1 className="display-3">Auto Trading</h1>
+          
+      <hr className="my-4"/>
+      <h3>{ symbol }: { price }</h3>
+      <h3>STATE: { state }</h3>
+      
+      <hr className="my-4"/>
+      <button 
+        type="button" 
+        style={styles.btn}
+        className="btn btn-primary" 
+        onClick={ handleStop }
+        disabled={ !run }
+      > STOP </button>
+
+      <hr className="my-4"/>
+      <OpenedTradesList trades={openedTrades} />
+    </div>
+
+  } else {
+    
+    content = <div>
       <h1 className="display-3">Start Trading</h1>
       <p className="lead">This page shows after selecting strategy.</p>
-
 
       <label className="col-form-label">Select Symbol</label>
       <div className="form-group">
@@ -191,6 +217,16 @@ const RunStrategy = () => {
           onChange={ handleDelayChange } />
         <div className="invalid-feedback">Please set order delay >= 1000ms.</div>
       </div>
+      
+      <hr className="my-2"/>
+      
+      <Link className="App-link" href="/home">
+        <button 
+          style={styles.btn}
+          className="btn btn-primary btn-lg" 
+          disabled={run}
+        > HOME</button>
+      </Link>
 
       <button
         type="button" 
@@ -200,37 +236,22 @@ const RunStrategy = () => {
         onClick={ handleStart }
       > START </button>
 
+      
+    </div>
+  }
+
+  //////////////////////////////////////////////////////////
+
+  return (
+    <Layout>
+      { content }
+
       <ErrorModal 
         show={showError} 
         title="Error!"
         text="Connection lost. Please try to connect to MetaTrader again."
         handleClose={() => setShowError(false)}
       />
-
-      <button 
-        type="button" 
-        style={styles.btn}
-        className="btn btn-primary" 
-        onClick={ handleStop }
-        disabled={!run}
-      > STOP </button>
-
-      
-      <hr className="my-4"/>
-      <Link className="App-link" href="/home">
-        <button 
-          style={styles.btn}
-          className="btn btn-primary btn-lg" 
-          disabled={run}
-        > Home</button>
-      </Link>
-
-      
-      <hr className="my-4"/>
-      <h3>{ symbol }: { price }</h3>
-
-      <hr className="my-4"/>
-      <OpenedTradesList trades={openedTrades} />
     </Layout>
   )
 }

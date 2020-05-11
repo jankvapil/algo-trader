@@ -54,56 +54,23 @@ class StrategyManager {
 
   //////////////////////////////////////////////////////////////////
 
-  // /**
-  //  * @todo ..Tests if strategy should simulate trades or trade real
-  //  *
-  //  * @param {Number} strategyId
-  //  */
-  // isSimulated(strategyId) {
-  //   return false
-  // }
-
-  //////////////////////////////////////////////////////////////////
-  
-  // /**
-  //  *
-  //  * @param {Array} openedTrades
-  //  * @param {Number} id
-  //  */
-  // getTicketByStrategyId(openedTrades, id) {
-  //   const keys = Object.keys(openedTrades)
-  //   const target = 0.1
-
-  //   // key == ticket (identificator of order)
-  //   for (const key of keys) {
-  //     const values = openedTrades[key]
-  //     if (values.comment == id) {
-  //       console.log(`${values.comment} = ${id}..?`)
-  //       return {key: key, profit: values.pnl}
-  //     }
-  //   }
-  //   return {key: 'init-state', profit: 0.0}
-  // }
-
-  //////////////////////////////////////////////////////////////////
-
   /**
    * Method gets event && sends it to all strategies
    *
    * @param {Array} openedTrades
    * @param {Array<SymbolValue>} db
+   *
+   * @returns {Object | null} returns state if is changed 
    */
   sendEvent(openedTrades, db) {
     
     const lastPrice = db[db.length - 1].getPrice()
-    
-    console.log(this.indicators)
+    let result = null
 
     //
     // Update indicators
     for (const i of this.indicators) {
 
-      // console.log(i)
       //
       // If indicator requires more data, skip it
       if (i.timeframe > db.length) continue
@@ -121,45 +88,22 @@ class StrategyManager {
     this.strategies.forEach(s => {
       const tempMap = new Map()
 
-      // console.log("indicators")
-      // console.log(s.getIndicators().map(i => i.name))
-      // console.log(s)
-
-
       for (const i of s.getIndicators().map(i => i.name)) {
-        // console.log(i)
-
         const iVal = this.indicatorValues.get(i)
         // Continue to next strategy..
         if (!iVal) return
         tempMap.set(i, iVal)
       }
 
-      // console.log(lastPrice)
-      // console.log(tempMap)
-      
-      ///////////////////////////////////////////////////
-      //// TODO: Decide if strategy should trade for real
-      ///////////////////////////////////////////////////
-      
-      // Need to get strategy ticket 
-      // const ticket = this.getTicketByStrategyId(openedTrades, s.id)
-      // console.log(ticket)
+      const changedState = s.updateState(lastPrice, tempMap)
 
-      // const simulated = this.isSimulated(s.id)
-
-      if (!this.wait) {
-        const wasChanged = s.updateState(lastPrice, tempMap)
-
-        if (wasChanged) {
-          
-          this.wait = true
-          console.log(`WAS CHANGED: ${wasChanged} - Applying delay`)
-  
-          setTimeout(() => { this.wait = false }, this.tradeDelay); 
-        }
+      // return copy of state object
+      if (changedState) {
+        result = Object.assign({}, changedState);
       }
     })
+  
+    return result
   }
 }
 

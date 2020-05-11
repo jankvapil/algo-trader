@@ -124,7 +124,7 @@ class Strategy {
             console.log("---- new state:");
             console.log(this.state);
             this.state.applyTransition();
-            return true;
+            return this.state;
           }
         }
       }
