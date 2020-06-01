@@ -1,6 +1,6 @@
 // @ts-check
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import useGlobal from "../store"
 
 ///
@@ -8,7 +8,7 @@ import useGlobal from "../store"
 ///
 const IndicatorAddForm = () => {
   
-  const [globalState, globalActions] = useGlobal();
+  const [globalState, globalActions] = useGlobal()
 
   ///// GUI
   const [idInputClass, setIdInputClass] = useState("form-control")

@@ -11,8 +11,8 @@ exports.average = n => {
    */
   return db => {
     if (db.length != n)
-      throw new Error(`Input array have to had size ${n} not ${db.length}.`);
+      throw new Error(`Input array have to had size ${n} not ${db.length}.`)
 
-    return db.reduce((a, b) => a + b, 0) / n;
-  };
-};
+    return db.reduce((a, b) => a + b, 0) / n
+  }
+}

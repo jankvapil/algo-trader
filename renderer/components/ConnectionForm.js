@@ -46,7 +46,6 @@ const ConnectionForm = (props) => {
   
   return (
     <div className="form-group">
-
       <h2 className="display-5">Connection: </h2>
 
       <label className="col-form-label" htmlFor="inputDefault">ReqPort:</label>

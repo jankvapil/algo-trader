@@ -49,9 +49,9 @@ class Client {
 
     this.connected = true
 
-    this.reqSocket.on("message", function(msg) {
-      // console.log("REQ: %s", msg.toString())
-    })
+    // this.reqSocket.on("message", function(msg) {
+    //   // console.log("REQ: %s", msg.toString())
+    // })
 
     // "this" references that class where event was fired..
     this.pullSocket.on("message", evt => this.handlePulledMsg(evt))

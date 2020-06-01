@@ -72,6 +72,7 @@ const RunStrategy = () => {
   /// STOP btn: handle onClick event
   ///
   const handleStop = () => {
+    globalState.client.disconnect()
     clearInterval(loop)
     setRun(false)
   }
