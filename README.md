@@ -6,6 +6,7 @@
 - Connects to [MetaTrader 4][mt4] via [ZMQ][zmq] Library
 - User definable Strategies represented as Final State Machines
 
+[![VIDEO PRESENTATION]()](https://youtu.be/H4JH7WbqcAA)
 
 #### 1. Indicator definition
 
